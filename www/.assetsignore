@@ -1,0 +1,2 @@
+# Testes do node --test nao fazem parte do site publicado.
+*.test.js

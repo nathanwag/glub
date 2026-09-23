@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gole</title>
+<meta name="description" content="Lembretes pra beber água ao longo do dia.">
+<meta name="theme-color" content="#0a0e12" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#eef3f7" media="(prefers-color-scheme: light)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Gole">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+<link rel="icon" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button class="icon-btn" id="topbar-back" type="button" aria-label="Voltar" hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+  </button>
+  <h1 class="topbar__title" id="topbar-title">Gole</h1>
+  <div class="topbar__actions" id="topbar-actions"></div>
+</header>
+
+<main class="view" id="view" tabindex="-1"></main>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet__backdrop" data-close-sheet></div>
+  <div class="sheet__panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="sheet__head">
+      <h2 class="sheet__title" id="sheet-title"></h2>
+      <button class="icon-btn" type="button" data-close-sheet aria-label="Fechar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet__body" id="sheet-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script type="module" src="./js/app.js"></script>
+</body>
+</html>

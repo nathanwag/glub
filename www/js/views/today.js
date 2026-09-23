@@ -1,0 +1,108 @@
+/* Hoje — "quanto eu ja bebi, e quando vem o proximo lembrete?" */
+
+import * as db from '../db.js';
+import * as push from '../push.js';
+import { daySummary } from '../intake.js';
+import { nextReminder } from '../reminder.js';
+import {
+  html, raw, setTop, toast, buzz, refresh, fmtTime, fmtMl, isIOS, isStandalone,
+  openSheet, closeSheet, node, APP_NAME,
+} from '../ui.js';
+
+const OTHER_AMOUNTS = [100, 150, 200, 300, 350, 400, 500, 750];
+
+const GEAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.5-2-3.4-2.3 1a7.7 7.7 0 0 0-2.6-1.5L14.2 2.6h-4l-.3 2.5a7.7 7.7 0 0 0-2.6 1.5l-2.3-1-2 3.4 2 1.5a7.6 7.6 0 0 0 0 3l-2 1.5 2 3.4 2.3-1a7.7 7.7 0 0 0 2.6 1.5l.3 2.5h4l.3-2.5a7.7 7.7 0 0 0 2.6-1.5l2.3 1 2-3.4z"/></svg>';
+
+async function drink(ml) {
+  buzz();
+  await db.addIntake(ml);
+  refresh();
+  // Adia o proximo lembrete no Worker. Offline nao impede registrar.
+  push.sync().catch(() => {});
+}
+
+async function undo(id) {
+  await db.deleteIntake(id);
+  refresh();
+  push.sync().catch(() => {});
+}
+
+function reminderLine(settings, summary, subscribed) {
+  if (isIOS() && !isStandalone()) {
+    return html`<a class="status" href="#/ajustes">Para receber lembretes, adicione o ${APP_NAME} à Tela de Início.</a>`;
+  }
+  if (!subscribed) {
+    return html`<a class="status" href="#/ajustes">Lembretes desligados · <strong>ativar</strong></a>`;
+  }
+  const next = nextReminder(settings, {
+    lastDrinkAt: summary.lastDrinkAt, day: db.dayOf(), todayMl: summary.totalMl,
+  }, new Date());
+  return next
+    ? html`<p class="status">Próximo lembrete por volta das <strong>${next}</strong></p>`
+    : html`<p class="status">Sem mais lembretes hoje.</p>`;
+}
+
+export async function render(view) {
+  setTop({
+    title: APP_NAME,
+    actions: html`<a class="icon-btn" href="#/ajustes" aria-label="Ajustes">${raw(GEAR)}</a>`,
+  });
+
+  const settings = db.settings();
+  const intakes = await db.intakesOfDay();
+  const summary = daySummary(intakes, settings.goalMl);
+  const subscribed = Boolean(await push.currentSubscription().catch(() => null));
+
+  view.innerHTML = html`
+    <section class="hero">
+      <div class="hero__num">
+        <span class="data hero__total">${new Intl.NumberFormat('pt-BR').format(summary.totalMl)}</span>
+        <span class="hero__goal">/ ${fmtMl(settings.goalMl)}</span>
+      </div>
+      <div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+           aria-valuenow="${Math.round(summary.progress * 100)}">
+        <div class="meter__fill" style="width: ${summary.progress * 100}%"></div>
+      </div>
+      <p class="hero__left">${summary.leftMl > 0 ? `Faltam ${fmtMl(summary.leftMl)}` : 'Meta de hoje batida'}</p>
+    </section>
+
+    <button class="btn btn--primary btn--lg btn--block" type="button" data-drink="${settings.glassMl}">
+      + ${fmtMl(settings.glassMl)}
+    </button>
+    <button class="btn btn--ghost btn--block" type="button" data-other>Outra quantidade</button>
+
+    ${raw(reminderLine(settings, summary, subscribed))}
+
+    <h2 class="section-title">Hoje</h2>
+    ${raw(intakes.length
+    ? html`<ul class="list card">${raw(intakes.map((i) => html`
+        <li class="list__row">
+          <span class="data list__time">${fmtTime(i.at)}</span>
+          <span class="grow">${fmtMl(i.ml)}</span>
+          <button class="icon-btn" type="button" data-undo="${i.id}" aria-label="Apagar ${fmtMl(i.ml)} das ${fmtTime(i.at)}">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </li>`).join(''))}</ul>`
+    : html`<p class="muted empty">Nenhum copo ainda hoje.</p>`)}
+  `;
+
+  view.onclick = (e) => {
+    const drinkBtn = e.target.closest('[data-drink]');
+    if (drinkBtn) { drink(Number(drinkBtn.dataset.drink)); return; }
+    const undoBtn = e.target.closest('[data-undo]');
+    if (undoBtn) { undo(Number(undoBtn.dataset.undo)); toast('Registro apagado'); return; }
+    if (e.target.closest('[data-other]')) pickOther();
+  };
+}
+
+function pickOther() {
+  const grid = node(html`<div class="amounts">${raw(OTHER_AMOUNTS.map((ml) => html`
+    <button class="btn" type="button" data-ml="${ml}">${fmtMl(ml)}</button>`).join(''))}</div>`);
+  grid.onclick = (e) => {
+    const btn = e.target.closest('[data-ml]');
+    if (!btn) return;
+    closeSheet();
+    drink(Number(btn.dataset.ml));
+  };
+  openSheet('Quanto você bebeu?', grid);
+}

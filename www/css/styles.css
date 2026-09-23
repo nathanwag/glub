@@ -1,0 +1,387 @@
+/* ==========================================================================
+   Gole - folha de estilo unica, mobile-first. Mesma estrutura de tokens do
+   gym_tracker (Anilha), com o vermelho da anilha trocado por azul-agua.
+   Sem dependencias externas: fontes locais, nada remoto.
+   ========================================================================== */
+
+:root {
+  --bg: #eef3f7;
+  --surface: #ffffff;
+  --surface-2: #e2e9ef;
+  --border: #d1dbe4;
+  --text: #10161c;
+  --muted: #5a6672;
+  --accent: #1668b8;
+  --accent-soft: #deebf8;
+  --on-accent: #ffffff;
+  --danger: #b3231b;
+  --success: #2c7a48;
+
+  --fs-xs: .68rem;
+  --fs-sm: .85rem;
+  --fs-hero: 4.75rem;
+  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+
+  --radius: 14px;
+  --radius-sm: 10px;
+  --tap: 44px;
+  --pad: 16px;
+  --shadow: 0 1px 2px rgba(16, 24, 32, .06), 0 6px 20px rgba(16, 24, 32, .06);
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --topbar-h: 52px;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0a0e12;
+    --surface: #131a21;
+    --surface-2: #1b242d;
+    --border: #26313c;
+    --text: #eef2f5;
+    --muted: #85919c;
+    --accent: #4aa3ff;
+    --accent-soft: #0f2236;
+    --on-accent: #06121f;
+    --danger: #ff6b6b;
+    --success: #46a05c;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 6px 20px rgba(0, 0, 0, .38);
+  }
+}
+
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/barlow-condensed-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+  src: url('../fonts/manrope-variable.woff2') format('woff2-variations'), url('../fonts/manrope-variable.woff2') format('woff2');
+}
+
+* { box-sizing: border-box; }
+
+/* Classes que definem display vencem o [hidden] do navegador; sem isto,
+   esconder pelo atributo nao funciona. */
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+}
+body {
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+}
+h1, h2 { margin: 0; font-weight: 650; line-height: 1.25; }
+p { margin: 0; }
+a { color: var(--accent); }
+svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+.data {
+  font-family: var(--display);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.01em;
+  line-height: .95;
+}
+.muted { color: var(--muted); }
+.row { display: flex; align-items: center; gap: 10px; }
+.grow { flex: 1; min-width: 0; }
+.stack > * + * { margin-top: 14px; }
+
+/* ---------- Topbar ---------- */
+
+.topbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: calc(var(--topbar-h) + var(--safe-top));
+  padding: var(--safe-top) 8px 0;
+  background: var(--bg);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar__title {
+  flex: 1;
+  min-width: 0;
+  padding-left: 8px;
+  font-family: var(--display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.topbar__actions { display: flex; }
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap);
+  height: var(--tap);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+.icon-btn:active { background: var(--surface-2); }
+
+/* ---------- Layout ---------- */
+
+.view {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: calc(var(--topbar-h) + var(--safe-top) + 16px) var(--pad) calc(var(--safe-bottom) + 32px);
+  outline: none;
+}
+.view > * + * { margin-top: 12px; }
+
+.section-title {
+  margin: 26px 0 10px;
+  font-family: var(--display);
+  font-size: .875rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sec > .section-title { margin-top: 0; }
+.view > .sec + .sec { margin-top: 26px; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.card__pad { padding: 14px; }
+
+/* ---------- Botoes ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--tap);
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+}
+.btn:active { transform: translateY(1px); }
+.btn[disabled] { opacity: .45; pointer-events: none; }
+.btn--primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn--ghost { background: transparent; border-color: transparent; color: var(--accent); }
+.btn--block { display: flex; width: 100%; }
+.btn--lg { min-height: 64px; font-size: 1.6rem; text-transform: none; letter-spacing: .04em; }
+
+/* ---------- Hoje ---------- */
+
+.hero { padding: 12px 0 8px; }
+.hero__num { display: flex; align-items: baseline; gap: 8px; }
+.hero__total { font-size: var(--fs-hero); }
+.hero__goal { font-family: var(--display); font-size: 1.4rem; font-weight: 700; color: var(--muted); }
+.hero__left { margin-top: 8px; color: var(--muted); font-size: var(--fs-sm); }
+
+.meter {
+  margin-top: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  overflow: hidden;
+}
+.meter__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width .35s ease;
+}
+
+.status {
+  display: block;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+}
+.status strong { color: var(--accent); }
+
+.list { margin: 0; padding: 0; list-style: none; }
+.list__row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 52px;
+  padding: 0 4px 0 16px;
+  border-bottom: 1px solid var(--border);
+}
+.list__row:last-child { border-bottom: 0; }
+.list__time { font-size: 1.3rem; color: var(--muted); }
+.empty { font-size: var(--fs-sm); }
+
+.amounts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+/* ---------- Ajustes ---------- */
+
+.set-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: var(--tap);
+}
+.field { display: block; }
+.field__k { display: block; margin-bottom: 6px; font-size: var(--fs-sm); color: var(--muted); }
+.hint { font-size: var(--fs-sm); color: var(--muted); }
+
+/* 16px no input: abaixo disso o Safari da zoom ao focar. */
+.input {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+}
+.input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+
+.stepper { display: flex; align-items: center; gap: 4px; }
+.stepper__v { min-width: 6.5ch; text-align: center; font-size: 1.3rem; }
+
+.seg {
+  display: flex;
+  padding: 3px;
+  gap: 3px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.seg__opt {
+  flex: 1;
+  min-height: 38px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.seg__opt[aria-checked="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+
+.days { display: flex; gap: 6px; }
+.day {
+  flex: 1;
+  aspect-ratio: 1;
+  max-width: var(--tap);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.day[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+
+.switch {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex: none;
+  width: 50px;
+  height: 30px;
+  margin: 0;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .2s;
+}
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+  transition: transform .2s;
+}
+.switch:checked { background: var(--accent); border-color: var(--accent); }
+.switch:checked::after { transform: translateX(20px); }
+
+/* ---------- Bottom sheet ---------- */
+
+.sheet { position: fixed; inset: 0; z-index: 40; }
+.sheet__backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, .45); }
+.sheet__panel {
+  position: absolute;
+  inset: auto 0 0 0;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 8px var(--pad) calc(var(--safe-bottom) + 20px);
+  border-radius: 20px 20px 0 0;
+  background: var(--surface);
+}
+.sheet__head { display: flex; align-items: center; justify-content: space-between; min-height: 52px; }
+.sheet__title { font-size: 1.1rem; }
+
+/* ---------- Toast ---------- */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--safe-bottom) + 24px);
+  z-index: 50;
+  max-width: calc(100% - 32px);
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: var(--fs-sm);
+  transform: translateX(-50%);
+  box-shadow: var(--shadow);
+}
