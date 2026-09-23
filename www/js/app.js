@@ -5,16 +5,22 @@ import * as push from './push.js';
 import { $, initSheet, closeSheet } from './ui.js';
 import * as today from './views/today.js';
 import * as settings from './views/settings.js';
+import * as goalCalc from './views/goal-calc.js';
 
 const ROUTES = {
   '/': today.render,
   '/ajustes': settings.render,
+  '/meta': goalCalc.render,
 };
 
 async function route() {
   closeSheet();
   const path = location.hash.replace(/^#/, '') || '/';
   const view = $('#view');
+  // Cada tela pendura seus handlers no mesmo #view; os da anterior nao podem sobrar.
+  view.onclick = null;
+  view.oninput = null;
+  view.onchange = null;
   try {
     await (ROUTES[path] || ROUTES['/'])(view);
   } catch (err) {

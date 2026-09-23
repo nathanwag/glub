@@ -77,6 +77,10 @@ export async function render(view) {
             <button class="icon-btn" type="button" data-goal="250" aria-label="Aumentar meta">+</button>
           </div>
         </div>
+        <a class="set-row set-row--link" href="#/meta">
+          <span>Calcular minha meta</span>
+          <span class="muted">peso, idade… ›</span>
+        </a>
         <div>
           <p class="field__k">Tamanho do copo</p>
           ${raw(segmented('glassMl', GLASSES, s.glassMl, (ml) => ml))}

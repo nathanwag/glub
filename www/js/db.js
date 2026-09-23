@@ -17,6 +17,15 @@ export const DEFAULT_SETTINGS = {
   tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
   // Segredo que o Worker exige em /api/*. Digitado uma vez em Ajustes.
   token: '',
+  // Perfil da calculadora de meta (hydration.js). Fica so no aparelho:
+  // push.serverConfig() so manda os campos de DEFAULT_CONFIG.
+  weightKg: null,
+  heightCm: null,
+  age: null,
+  sex: '',
+  exerciseMin: null,
+  hotClimate: false,
+  pregnancy: '',
 };
 
 let dbPromise = null;

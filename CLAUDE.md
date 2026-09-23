@@ -47,6 +47,10 @@ npm run dev:worker               # wrangler dev: app + API + cron (precisa de wo
 - **`PUT /api/sync` mescla, não substitui.** `lastSentAt` pertence ao cron, e
   `subscription` só muda quando vem no corpo: objeto liga, `null` desliga,
   ausente mantém.
+- **O perfil da calculadora de meta fica só no aparelho** (peso, altura,
+  idade, sexo, exercício, calor e gestação, guardados em `settings`).
+  `push.serverConfig()` só envia as chaves de `DEFAULT_CONFIG`. Não mande
+  dado de saúde pro Worker.
 - **`DB_NAME = 'gole'` não muda.** Trocar o nome abre um banco vazio.
 - **Arquivos `*.test.js` não são publicados** (`www/.assetsignore`).
 
@@ -55,6 +59,11 @@ npm run dev:worker               # wrangler dev: app + API + cron (precisa de wo
 Só os módulos puros e o Worker são testados. Os seams são:
 - `reminder.js`: `isDue`, `nextReminder`, `configError`
 - `intake.js`: `daySummary`
+- `hydration.js`: `estimateWater(profile)`. A conta principal usa ml/kg por
+  faixa de idade (40, 35, 30 e 25), mais exercício (500 ml/h, o piso do ACSM),
+  calor (+500) e gestação ou amamentação (+300/+700, EFSA). Também compara com
+  a superfície corporal (Mosteller × 1.500 ml/m²) e com a EFSA (2,0 L
+  mulheres, 2,5 L homens). Só o peso é obrigatório.
 - `worker/src/cron.js`: `handleCron({ kv, send, now })`
 - `worker/src/api.js`: `handleApi(request, deps)`
 

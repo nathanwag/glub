@@ -353,6 +353,39 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .switch:checked { background: var(--accent); border-color: var(--accent); }
 .switch:checked::after { transform: translateX(20px); }
 
+.set-row--link { color: var(--text); text-decoration: none; }
+
+/* ---------- Calcular meta ---------- */
+
+.input-unit { position: relative; display: block; }
+.input-unit .input { padding-right: 52px; }
+.input-unit__u {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  pointer-events: none;
+}
+
+.calc__total { margin: 2px 0 12px; font-size: 3.25rem; color: var(--accent); }
+.calc__steps { margin: 0 0 14px; padding: 0; list-style: none; }
+.calc__steps li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-sm);
+}
+.calc__steps li:last-child { border-bottom: 0; }
+.calc__steps .data { font-size: 1.15rem; white-space: nowrap; }
+.calc__steps small { display: block; color: var(--muted); font-size: var(--fs-xs); }
+.calc__cmp-title { margin-top: 18px; }
+.calc__note { margin-top: 12px; }
+
 /* ---------- Bottom sheet ---------- */
 
 .sheet { position: fixed; inset: 0; z-index: 40; }

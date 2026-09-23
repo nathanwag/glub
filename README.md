@@ -9,6 +9,12 @@ horários são configurados no próprio app.
 - **Configurável:** meta diária, tamanho do copo, janela de horário (ex.:
   08:00–22:00), intervalo (30 min a 2 h), dias da semana e a opção de parar
   quando bater a meta.
+- **Calcular minha meta** (em Ajustes): estima quanto beber por dia a partir
+  do peso e da idade. É a regra de ml por kg das calculadoras brasileiras (40,
+  35, 30 ou 25 ml conforme a faixa). Exercício, calor, gestação ou
+  amamentação, altura e sexo são opcionais. Os dois últimos habilitam a
+  comparação com a superfície corporal e com a referência da EFSA. Os dados
+  ficam só no aparelho.
 - **Custo zero:** um Cloudflare Worker no plano grátis. O repositório pode ser
   privado.
 

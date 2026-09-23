@@ -4,7 +4,7 @@
  * arquivos cache-primeiro com revalidacao. Bumpar VERSION e como se deploya.
  */
 
-const VERSION = 'gole-v1';
+const VERSION = 'gole-v2';
 
 // Em localhost o cache atrapalha mais do que ajuda; o SW fica transparente
 // (mas continua exibindo push, pra testar notificacao no desktop).
@@ -23,8 +23,10 @@ const ASSETS = [
   './js/push.js',
   './js/intake.js',
   './js/reminder.js',
+  './js/hydration.js',
   './js/views/today.js',
   './js/views/settings.js',
+  './js/views/goal-calc.js',
   './icons/icon.svg',
   './icons/icon-180.png',
   './icons/icon-192.png',
