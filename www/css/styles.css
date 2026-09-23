@@ -231,6 +231,9 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   transition: width .35s ease;
 }
 
+.notice { margin-bottom: 16px; }
+.notice__actions { display: grid; gap: 8px; margin-top: 12px; }
+
 .status {
   display: block;
   padding: 12px 14px;

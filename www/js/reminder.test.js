@@ -50,6 +50,31 @@ test('ignorado o lembrete, o proximo vem um intervalo depois dele', () => {
   assert.equal(isDue(config, state, at('2026-09-22T10:10:00')), true);
 });
 
+test('adiar lembra de novo em 10 min, mesmo antes do intervalo acabar', () => {
+  const state = {
+    lastSentAt: at('2026-09-22T09:00:00').toISOString(),
+    snoozedAt: at('2026-09-22T09:02:00').toISOString(),
+  };
+  assert.equal(isDue(config, state, at('2026-09-22T09:11:00')), false);
+  assert.equal(isDue(config, state, at('2026-09-22T09:12:00')), true);
+  assert.equal(nextReminder(config, state, at('2026-09-22T09:05:00')), '09:12');
+});
+
+test('o adiamento vale uma vez: depois do lembrete adiado, ou de um copo, volta o intervalo', () => {
+  const snoozedAt = at('2026-09-22T09:02:00').toISOString();
+  const resent = { lastSentAt: at('2026-09-22T09:15:00').toISOString(), snoozedAt };
+  assert.equal(isDue(config, resent, at('2026-09-22T09:30:00')), false);
+  assert.equal(isDue(config, resent, at('2026-09-22T10:15:00')), true);
+
+  const drank = {
+    lastSentAt: at('2026-09-22T09:00:00').toISOString(),
+    lastDrinkAt: at('2026-09-22T09:05:00').toISOString(),
+    snoozedAt,
+  };
+  assert.equal(isDue(config, drank, at('2026-09-22T09:15:00')), false);
+  assert.equal(isDue(config, drank, at('2026-09-22T10:05:00')), true);
+});
+
 test('o ultimo lembrete de ontem nao atrasa o primeiro de hoje', () => {
   const state = { lastSentAt: at('2026-09-21T21:50:00').toISOString() };
   assert.equal(isDue(config, state, at('2026-09-22T08:00:00')), true);

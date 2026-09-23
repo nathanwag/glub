@@ -4,7 +4,7 @@
  * arquivos cache-primeiro com revalidacao. Bumpar VERSION e como se deploya.
  */
 
-const VERSION = 'gole-v2';
+const VERSION = 'gole-v3';
 
 // Em localhost o cache atrapalha mais do que ajuda; o SW fica transparente
 // (mas continua exibindo push, pra testar notificacao no desktop).
@@ -122,7 +122,12 @@ self.addEventListener('notificationclick', (event) => {
   event.waitUntil((async () => {
     const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     const open = windows.find((w) => 'focus' in w);
-    if (open) return open.focus();
+    if (open) {
+      // O link registra o copo (#/bebi?lembrete=...), entao a janela aberta
+      // precisa ir ate ele, nao so ganhar foco.
+      open.postMessage({ navigate: url });
+      return open.focus();
+    }
     return self.clients.openWindow(url);
   })());
 });

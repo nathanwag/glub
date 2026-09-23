@@ -47,6 +47,11 @@ npm run dev:worker               # wrangler dev: app + API + cron (precisa de wo
 - **`PUT /api/sync` mescla, não substitui.** `lastSentAt` pertence ao cron, e
   `subscription` só muda quando vem no corpo: objeto liga, `null` desliga,
   ausente mantém.
+- **Tocar na notificação registra um copo.** O `navigate` é
+  `#/bebi?lembrete=<envio ISO>`, e o id guardado em `lastReminder` impede o
+  mesmo toque de contar duas vezes. Com o app já aberto, o `sw.js` manda o
+  link por `postMessage`. `snoozedAt` (adiar) vale até o próximo copo ou
+  lembrete, e o `sync` sempre o envia.
 - **O perfil da calculadora de meta fica só no aparelho** (peso, altura,
   idade, sexo, exercício, calor e gestação, guardados em `settings`).
   `push.serverConfig()` só envia as chaves de `DEFAULT_CONFIG`. Não mande

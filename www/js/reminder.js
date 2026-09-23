@@ -14,6 +14,10 @@ export const DEFAULT_CONFIG = {
   stopAtGoal: true,
 };
 
+// "Adiar" da tela aberta pela notificacao. O cron roda de 5 em 5 min, entao o
+// lembrete adiado chega entre 10 e 15 min depois.
+export const SNOOZE_MIN = 10;
+
 const toMinutes = (hhmm) => {
   const [h, m] = hhmm.split(':').map(Number);
   return h * 60 + m;
@@ -55,6 +59,13 @@ function nextMinutes(config, state, today) {
     if (!iso) continue;
     const event = localParts(new Date(iso), config.tz);
     if (event.day === today.day) next = Math.max(next, event.minutes + config.intervalMin);
+  }
+  // O adiamento vale ate o proximo evento: o lembrete adiado sair, ou um copo.
+  // Pode antecipar o lembrete, porque adiar vem de quem ainda nao bebeu.
+  const events = [state.lastDrinkAt, state.lastSentAt].filter(Boolean).map((iso) => new Date(iso));
+  if (state.snoozedAt && events.every((e) => e < new Date(state.snoozedAt))) {
+    const snooze = localParts(new Date(state.snoozedAt), config.tz);
+    if (snooze.day === today.day) next = snooze.minutes + SNOOZE_MIN;
   }
   return next < toMinutes(config.end) ? next : null;
 }

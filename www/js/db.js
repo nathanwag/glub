@@ -26,6 +26,10 @@ export const DEFAULT_SETTINGS = {
   exerciseMin: null,
   hotClimate: false,
   pregnancy: '',
+  // Toque na notificacao (views/today.js): id do ultimo lembrete ja
+  // registrado, pra nao contar o mesmo toque duas vezes, e quando adiou.
+  lastReminder: '',
+  snoozedAt: null,
 };
 
 let dbPromise = null;

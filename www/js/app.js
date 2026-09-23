@@ -11,18 +11,19 @@ const ROUTES = {
   '/': today.render,
   '/ajustes': settings.render,
   '/meta': goalCalc.render,
+  '/bebi': today.drinkFromReminder,
 };
 
 async function route() {
   closeSheet();
-  const path = location.hash.replace(/^#/, '') || '/';
+  const [path, query = ''] = location.hash.replace(/^#/, '').split('?');
   const view = $('#view');
   // Cada tela pendura seus handlers no mesmo #view; os da anterior nao podem sobrar.
   view.onclick = null;
   view.oninput = null;
   view.onchange = null;
   try {
-    await (ROUTES[path] || ROUTES['/'])(view);
+    await (ROUTES[path] || ROUTES['/'])(view, new URLSearchParams(query));
   } catch (err) {
     console.error(err);
     view.textContent = `Algo deu errado: ${err.message}`;
@@ -50,6 +51,10 @@ async function boot() {
 
   if ('serviceWorker' in navigator && window.isSecureContext) {
     navigator.serviceWorker.register('./sw.js').catch((err) => console.error('SW', err));
+    // Toque numa notificacao com o app ja aberto: o sw.js manda o link pra ca.
+    navigator.serviceWorker.addEventListener('message', (e) => {
+      if (e.data?.navigate) location.hash = new URL(e.data.navigate).hash;
+    });
   }
 
   await route();

@@ -42,6 +42,7 @@ export async function handleApi(request, { kv, token, send, vapidPublicKey }) {
       ...device,
       config: body.config,
       lastDrinkAt: body.lastDrinkAt ?? null,
+      snoozedAt: body.snoozedAt ?? null,
       todayMl: Number(body.todayMl) || 0,
       day: body.day ?? null,
       appUrl: `${new URL(request.url).origin}/`,

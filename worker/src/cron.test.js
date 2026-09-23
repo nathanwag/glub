@@ -75,7 +75,7 @@ test('falha passageira do push service tenta de novo na rodada seguinte', async 
   assert.equal(sent.length, 3);
 });
 
-test('a notificacao diz quanto falta pra meta e abre o app ao tocar', async () => {
+test('a notificacao diz quanto falta pra meta', async () => {
   const appUrl = 'https://water-alert.exemplo.workers.dev/';
   const kv = fakeKv({
     device: { subscription, config, appUrl, day: '2026-09-22', todayMl: 750 },
@@ -89,5 +89,19 @@ test('a notificacao diz quanto falta pra meta e abre o app ao tocar', async () =
   const { web_push: magic, notification } = sent[0].message;
   assert.equal(magic, 8030);
   assert.match(notification.body, /1250 ml/);
-  assert.equal(notification.navigate, appUrl);
+});
+
+test('tocar na notificacao leva a rota que registra o copo, com um id por lembrete', async () => {
+  const appUrl = 'https://water-alert.exemplo.workers.dev/';
+  const kv = fakeKv({ device: { subscription, config, appUrl } });
+  const { send, sent } = fakeSender();
+
+  await handleCron({ kv, send, now: at('2026-09-22T08:00:00') });
+  await handleCron({ kv, send, now: at('2026-09-22T09:00:00') });
+
+  // O id e o que impede o mesmo toque de registrar dois copos.
+  const [first, second] = sent.map((s) => new URL(s.message.notification.navigate));
+  assert.equal(first.origin + first.pathname, appUrl);
+  assert.match(first.hash, /^#\/bebi\?lembrete=./);
+  assert.notEqual(first.hash, second.hash);
 });

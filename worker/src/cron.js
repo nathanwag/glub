@@ -4,7 +4,11 @@ export const DEVICE_KEY = 'device';
 
 /** Payload no formato do Declarative Web Push (web_push: 8030, Safari 18.4+):
  *  o iOS mostra a notificacao sozinho mesmo se o service worker falhar, e o
- *  sw.js le o mesmo formato nas versoes anteriores. */
+ *  sw.js le o mesmo formato nas versoes anteriores.
+ *
+ *  O iOS nao mostra botoes em notificacao de web push, entao tocar nela ja e
+ *  a resposta "bebi": o link abre a rota que registra o copo. O id (o instante
+ *  do envio) impede que o mesmo toque registre duas vezes. */
 export function reminderMessage(device, now) {
   const { config } = device;
   const today = localParts(now, config.tz).day;
@@ -17,7 +21,7 @@ export function reminderMessage(device, now) {
       body: left > 0
         ? `Faltam ${left} ml pra meta de hoje.`
         : 'Meta batida, mas um gole a mais não faz mal.',
-      navigate: device.appUrl,
+      navigate: `${device.appUrl}#/bebi?lembrete=${encodeURIComponent(now.toISOString())}`,
       tag: 'agua',
       lang: 'pt-BR',
     },

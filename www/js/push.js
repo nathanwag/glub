@@ -47,7 +47,7 @@ export async function sync(extra = {}) {
   const day = db.dayOf();
   const { totalMl, lastDrinkAt } = daySummary(await db.intakesOfDay(day), settings.goalMl);
   await api('PUT', 'sync', {
-    config: serverConfig(settings), lastDrinkAt, todayMl: totalMl, day, ...extra,
+    config: serverConfig(settings), lastDrinkAt, todayMl: totalMl, day, snoozedAt: settings.snoozedAt, ...extra,
   });
 }
 

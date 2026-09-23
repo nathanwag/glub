@@ -64,6 +64,10 @@ envio.
       Aceite a permissão de notificação.
    4. Toque em **Testar**. A notificação deve chegar em segundos.
 
+Tocar na notificação já registra um copo: o iOS não mostra botões em web push.
+O app abre com a opção **Não bebi · adiar 10 min** (apaga o copo e lembra de
+novo em 10 a 15 min) e **Desfazer**. Isso vale também pro **Testar**.
+
 Requer iOS 16.4 ou mais novo.
 
 ## Desenvolvimento

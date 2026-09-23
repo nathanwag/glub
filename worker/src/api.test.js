@@ -103,12 +103,24 @@ test('sincronizar de novo nao apaga o registro do ultimo lembrete enviado', asyn
   assert.equal(sent.length, 1);
 });
 
+test('adiar pelo app faz o cron lembrar de novo em 10 min', async () => {
+  const { call, sent, deps } = setup();
+  await call('PUT', '/api/sync', { body: { subscription, config } });
+  await handleCron({ ...deps, now: at('2026-09-22T08:00:00') });
+
+  await call('PUT', '/api/sync', { body: { config, snoozedAt: at('2026-09-22T08:01:00').toISOString() } });
+  await handleCron({ ...deps, now: at('2026-09-22T08:10:00') });
+  assert.equal(sent.length, 1);
+  await handleCron({ ...deps, now: at('2026-09-22T08:15:00') });
+  assert.equal(sent.length, 2);
+});
+
 test('a notificacao abre o app na mesma origem da API', async () => {
   const { call, sent, deps } = setup();
   await call('PUT', '/api/sync', { body: { subscription, config } });
   await handleCron({ ...deps, now: at('2026-09-22T08:00:00') });
 
-  assert.equal(sent[0].message.notification.navigate, `${ORIGIN}/`);
+  assert.ok(sent[0].message.notification.navigate.startsWith(`${ORIGIN}/#`));
 });
 
 test('desativar os lembretes (assinatura null) esquece a assinatura', async () => {
