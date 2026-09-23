@@ -1,0 +1,15 @@
+{
+  "name": "gole",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Lembrete de beber agua no iPhone: PWA + Web Push disparado por um Cloudflare Worker.",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "browser-sync start --config bs-config.cjs",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.0"
+  }
+}

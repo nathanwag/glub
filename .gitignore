@@ -1,0 +1,12 @@
+node_modules/
+
+# Config local do Claude Code — nao faz parte do projeto.
+.claude/
+
+# Estado local do wrangler (dev e segredos de dev do Worker).
+.wrangler/
+.dev.vars
+
+.DS_Store
+Thumbs.db
+*.log
