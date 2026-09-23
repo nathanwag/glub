@@ -55,6 +55,7 @@ export async function handleCron({ kv, send, now }) {
   const status = await deliver({ kv, send }, device, reminderMessage(device, now));
   // Falha nao grava lastSentAt: a proxima rodada tenta de novo.
   if (ok(status)) {
+    console.log('lembrete enviado', status);
     await kv.put(DEVICE_KEY, JSON.stringify({ ...device, lastSentAt: now.toISOString() }));
   }
 }

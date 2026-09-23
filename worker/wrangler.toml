@@ -1,0 +1,19 @@
+# Um Worker so: serve o app (../www) e a API em /api/*, e roda o cron que
+# decide e envia os lembretes. Publicado pelo .github/workflows/deploy.yml.
+name = "water-alert"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[assets]
+directory = "../www"
+binding = "ASSETS"
+# /api/* nunca pode cair num arquivo estatico.
+run_worker_first = ["/api/*"]
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+# Sem id de proposito: o wrangler cria o namespace no primeiro deploy e
+# mantem o vinculo nos seguintes (provisionamento automatico, wrangler 4.45+).
+[[kv_namespaces]]
+binding = "STATE"
