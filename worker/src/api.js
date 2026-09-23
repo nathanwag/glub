@@ -55,13 +55,13 @@ export async function handleApi(request, { kv, token, send, vapidPublicKey }) {
   if (pathname === '/api/test' && request.method === 'POST') {
     const device = await kv.get(DEVICE_KEY, 'json');
     if (!device?.subscription) return json({ error: 'Os lembretes não estão ativos.' }, 404);
-    const status = await deliver({ kv, send }, device, reminderMessage(device, new Date()));
+    const { status, reason } = await deliver({ kv, send }, device, reminderMessage(device, new Date()));
     if (status >= 200 && status < 300) return json({ ok: true });
-    const gone = status === 404 || status === 410;
-    return json(
-      { error: gone ? 'A assinatura expirou. Ative os lembretes de novo.' : 'O serviço de push recusou o envio.' },
-      gone ? 410 : 502,
-    );
+    if (status === 404 || status === 410) {
+      return json({ error: 'A assinatura expirou. Ative os lembretes de novo.' }, 410);
+    }
+    const detail = [status || null, reason || null].filter(Boolean).join(' ');
+    return json({ error: `O serviço de push recusou o envio (${detail || 'sem resposta'}).` }, 502);
   }
 
   return json({ error: 'Rota desconhecida.' }, 404);

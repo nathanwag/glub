@@ -30,13 +30,13 @@ function fakeKv() {
   };
 }
 
-function setup({ pushStatus = 201 } = {}) {
+function setup({ pushStatus = 201, pushBody = '' } = {}) {
   const sent = [];
   const deps = {
     kv: fakeKv(),
     token: TOKEN,
     vapidPublicKey: 'BPublica',
-    send: async (sub, message) => { sent.push({ sub, message }); return { status: pushStatus }; },
+    send: async (sub, message) => { sent.push({ sub, message }); return new Response(pushBody, { status: pushStatus }); },
   };
   const call = (method, path, { body, token = TOKEN } = {}) => handleApi(new Request(ORIGIN + path, {
     method,
@@ -164,4 +164,16 @@ test('testar com assinatura expirada a esquece e avisa o app', async () => {
 
   assert.equal(res.status, 410);
   assert.equal((await (await call('GET', '/api/sync')).json()).subscribed, false);
+});
+
+test('testar recusado pelo push service mostra o status e o motivo que ele deu', async () => {
+  const { call } = setup({ pushStatus: 403, pushBody: '{"reason":"BadJwtToken"}' });
+  await call('PUT', '/api/sync', { body: { subscription, config } });
+
+  const res = await call('POST', '/api/test');
+
+  assert.equal(res.status, 502);
+  const { error } = await res.json();
+  assert.match(error, /403/);
+  assert.match(error, /BadJwtToken/);
 });

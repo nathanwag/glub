@@ -28,24 +28,36 @@ export function reminderMessage(device, now) {
   };
 }
 
-/** Envia `message` ao aparelho. Devolve o status HTTP do push service, ou 0
- *  se nem chegou nele. 404/410 significam que o aparelho desinstalou o app ou
- *  revogou a permissao: a assinatura e esquecida, e o app manda uma nova na
- *  proxima vez que for aberto. */
+/** Envia `message` ao aparelho. Devolve o status HTTP do push service (0 se
+ *  nem chegou nele) e o motivo que ele deu na recusa. 404/410 significam que o
+ *  aparelho desinstalou o app ou revogou a permissao: a assinatura e
+ *  esquecida, e o app manda uma nova na proxima vez que for aberto. */
 export async function deliver({ kv, send }, device, message) {
-  let status;
+  let res;
   try {
-    ({ status } = await send(device.subscription, message));
+    res = await send(device.subscription, message);
   } catch (err) {
     console.error('push falhou', err);
-    return 0;
+    return { status: 0, reason: String(err?.message ?? err) };
   }
+  const { status } = res;
+  if (status >= 200 && status < 300) return { status };
   if (status === 404 || status === 410) {
     await kv.put(DEVICE_KEY, JSON.stringify({ ...device, subscription: null }));
-  } else if (status < 200 || status >= 300) {
-    console.error('push recusado', status);
   }
-  return status;
+  const reason = await rejectionReason(res);
+  console.error('push recusado', status, reason);
+  return { status, reason };
+}
+
+// A Apple responde {"reason":"BadJwtToken"}; o FCM responde texto.
+async function rejectionReason(res) {
+  const text = (await res.text?.().catch(() => '')) ?? '';
+  try {
+    return JSON.parse(text).reason ?? text;
+  } catch {
+    return text.trim().slice(0, 200);
+  }
 }
 
 const ok = (status) => status >= 200 && status < 300;
@@ -56,7 +68,7 @@ export async function handleCron({ kv, send, now }) {
   const device = await kv.get(DEVICE_KEY, 'json');
   if (!device?.subscription || !isDue(device.config, device, now)) return;
 
-  const status = await deliver({ kv, send }, device, reminderMessage(device, now));
+  const { status } = await deliver({ kv, send }, device, reminderMessage(device, now));
   // Falha nao grava lastSentAt: a proxima rodada tenta de novo.
   if (ok(status)) {
     console.log('lembrete enviado', status);
