@@ -260,6 +260,81 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 
 .amounts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 
+/* ---------- Historico ---------- */
+
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stat { display: flex; flex-direction: column; gap: 6px; padding: 12px; }
+.stat__v { font-size: 2rem; }
+.stat__k { font-size: var(--fs-xs); color: var(--muted); line-height: 1.25; }
+
+.chart { margin: 12px 0 0; }
+.chart__plot {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  height: 180px;
+  margin-right: 34px;
+  border-bottom: 1px solid var(--border);
+}
+.chart--dense .chart__plot, .chart--dense .chart__x { gap: 2px; }
+.chart__col {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  border-radius: 4px 4px 0 0;
+}
+.chart__col:active { background: var(--surface-2); }
+.chart__bar {
+  display: block;
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  background: var(--accent);
+}
+.chart__goal {
+  position: absolute;
+  inset: auto 0 auto 0;
+  z-index: 1;
+  border-top: 1px dashed var(--muted);
+  pointer-events: none;
+}
+/* O rotulo fica na margem direita, fora das barras: nunca cobre uma. */
+.chart__goal span {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  padding-left: 6px;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
+.chart__x { display: flex; gap: 6px; margin: 6px 34px 0 0; }
+.chart__x span {
+  flex: 1;
+  min-width: 0;
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+  font-family: var(--display);
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.chart__x .is-today { color: var(--accent); }
+
+.list__row--link { color: var(--text); text-decoration: none; border-bottom: 0; }
+li + li > .list__row--link { border-top: 1px solid var(--border); }
+.daylist__name { width: 5.5em; flex: none; font-size: var(--fs-sm); }
+.daylist__ml { width: 3.2em; flex: none; margin-right: 12px; text-align: right; font-size: 1.2rem; color: var(--muted); }
+.daylist__ml.is-met { color: var(--text); }
+.meter--sm { display: block; margin-top: 0; height: 6px; }
+.meter--sm .meter__fill { display: block; }
+
+.daynav { display: flex; align-items: center; justify-content: space-between; }
+.daynav__label { font-family: var(--display); font-size: 1.15rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+
 /* ---------- Ajustes ---------- */
 
 .set-row {

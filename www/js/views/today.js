@@ -2,14 +2,16 @@
 
 import * as db from '../db.js';
 import * as push from '../push.js';
-import { daySummary } from '../intake.js';
+import { addDays, daySummary } from '../intake.js';
 import { SNOOZE_MIN, nextReminder } from '../reminder.js';
 import {
-  html, raw, setTop, toast, buzz, refresh, fmtTime, fmtMl, isIOS, isStandalone,
-  openSheet, closeSheet, node, APP_NAME,
+  html, raw, setTop, toast, buzz, refresh, fmtMl, isIOS, isStandalone,
+  openSheet, closeSheet, node, intakeList, APP_NAME,
 } from '../ui.js';
 
-const OTHER_AMOUNTS = [100, 150, 200, 300, 350, 400, 500, 750];
+export const OTHER_AMOUNTS = [100, 150, 200, 300, 350, 400, 500, 750];
+
+const CHART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20v-8M12 20V5M19 20v-5"/></svg>';
 
 // Copo registrado pelo toque na notificacao. A faixa de desfazer/adiar fica
 // enquanto ele for o ultimo copo e for recente.
@@ -95,7 +97,8 @@ function reminderLine(settings, summary, subscribed) {
 export async function render(view) {
   setTop({
     title: APP_NAME,
-    actions: html`<a class="icon-btn" href="#/ajustes" aria-label="Ajustes">${raw(GEAR)}</a>`,
+    actions: html`<a class="icon-btn" href="#/historico" aria-label="Histórico">${raw(CHART)}</a>
+      <a class="icon-btn" href="#/ajustes" aria-label="Ajustes">${raw(GEAR)}</a>`,
   });
 
   const settings = db.settings();
@@ -125,16 +128,8 @@ export async function render(view) {
     ${raw(reminderLine(settings, summary, subscribed))}
 
     <h2 class="section-title">Hoje</h2>
-    ${raw(intakes.length
-    ? html`<ul class="list card">${raw(intakes.map((i) => html`
-        <li class="list__row">
-          <span class="data list__time">${fmtTime(i.at)}</span>
-          <span class="grow">${fmtMl(i.ml)}</span>
-          <button class="icon-btn" type="button" data-undo="${i.id}" aria-label="Apagar ${fmtMl(i.ml)} das ${fmtTime(i.at)}">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-          </button>
-        </li>`).join(''))}</ul>`
-    : html`<p class="muted empty">Nenhum copo ainda hoje.</p>`)}
+    ${raw(intakeList(intakes, 'Nenhum copo ainda hoje.'))}
+    <a class="btn btn--ghost btn--block" href="#/dia?d=${addDays(db.dayOf(), -1)}">Esqueceu um copo? Ver ontem</a>
   `;
 
   view.onclick = (e) => {

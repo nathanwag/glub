@@ -105,3 +105,9 @@ export async function intakesOfDay(day = dayOf()) {
   const rows = await tx('intakes', 'readonly', (t) => req(t.objectStore('intakes').index('by_day').getAll(day)));
   return (await rows).sort((a, b) => (a.at < b.at ? 1 : -1));
 }
+
+/** Copos de `from` a `to` (dias AAAA-MM-DD, inclusive), em qualquer ordem. */
+export async function intakesBetween(from, to) {
+  const range = IDBKeyRange.bound(from, to);
+  return tx('intakes', 'readonly', (t) => req(t.objectStore('intakes').index('by_day').getAll(range)));
+}

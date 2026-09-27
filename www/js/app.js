@@ -6,12 +6,16 @@ import { $, initSheet, closeSheet } from './ui.js';
 import * as today from './views/today.js';
 import * as settings from './views/settings.js';
 import * as goalCalc from './views/goal-calc.js';
+import * as historyView from './views/history.js';
+import * as day from './views/day.js';
 
 const ROUTES = {
   '/': today.render,
   '/ajustes': settings.render,
   '/meta': goalCalc.render,
   '/bebi': today.drinkFromReminder,
+  '/historico': historyView.render,
+  '/dia': day.render,
 };
 
 async function route() {

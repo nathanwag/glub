@@ -117,3 +117,21 @@ export const fmtTime = (iso) => new Intl.DateTimeFormat('pt-BR', { hour: '2-digi
   .format(new Date(iso));
 
 export const fmtMl = (ml) => `${new Intl.NumberFormat('pt-BR').format(ml)} ml`;
+
+/** Formata um dia AAAA-MM-DD. Meio-dia UTC com timeZone UTC: o dia nunca
+ *  escorrega pro vizinho, seja qual for o fuso do aparelho. */
+export const fmtDay = (day, opts) => new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC', ...opts })
+  .format(new Date(`${day}T12:00:00Z`));
+
+/** Lista de copos com botao de apagar (data-undo), do mais recente ao mais antigo. */
+export function intakeList(intakes, emptyText) {
+  if (!intakes.length) return html`<p class="muted empty">${emptyText}</p>`;
+  return html`<ul class="list card">${raw(intakes.map((i) => html`
+    <li class="list__row">
+      <span class="data list__time">${fmtTime(i.at)}</span>
+      <span class="grow">${fmtMl(i.ml)}</span>
+      <button class="icon-btn" type="button" data-undo="${i.id}" aria-label="Apagar ${fmtMl(i.ml)} das ${fmtTime(i.at)}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </li>`).join(''))}</ul>`;
+}
