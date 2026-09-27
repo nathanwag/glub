@@ -63,7 +63,10 @@ npm run dev:worker               # wrangler dev: app + API + cron (precisa de wo
 
 Só os módulos puros e o Worker são testados. Os seams são:
 - `reminder.js`: `isDue`, `nextReminder`, `configError`
-- `intake.js`: `daySummary`
+- `intake.js`: `daySummary`, `history` (totais por dia, média só dos dias
+  com registro, dias na meta e sequência, onde hoje incompleto não quebra a
+  sequência) e `atLocal(day, 'HH:MM', tz)`, que dá o instante de um copo
+  lançado num dia passado
 - `hydration.js`: `estimateWater(profile)`. A conta principal usa ml/kg por
   faixa de idade (40, 35, 30 e 25), mais exercício (500 ml/h, o piso do ACSM),
   calor (+500) e gestação ou amamentação (+300/+700, EFSA). Também compara com
