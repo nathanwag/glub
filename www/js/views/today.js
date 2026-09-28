@@ -3,18 +3,17 @@
 import * as db from '../db.js';
 import * as push from '../push.js';
 import {
-  addDays, byPeriod, daySummary, parseMl,
+  addDays, byPeriod, daySummary, history, parseMl,
 } from '../intake.js';
 import { SNOOZE_MIN, nextReminder } from '../reminder.js';
 import * as puffer from '../puffer.js';
 import {
   html, raw, setTop, toast, buzz, refresh, fmtMl, isIOS, isStandalone,
-  openSheet, closeSheet, node, fmtTime, APP_NAME,
+  openSheet, closeSheet, node, fmtTime, fmtDay, APP_NAME,
 } from '../ui.js';
 
 export const OTHER_AMOUNTS = [100, 150, 200, 300, 350, 400, 500, 750];
 
-const CHART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20v-8M12 20V5M19 20v-5"/></svg>';
 
 // Copo registrado pelo toque na notificacao. A faixa de desfazer/adiar fica
 // enquanto ele for o ultimo copo e for recente.
@@ -149,11 +148,35 @@ function togglePeriod(button) {
   button.nextElementSibling.hidden = !open;
 }
 
+// A porta do Historico: sem icone no topo, e a semana que chama pra olhar.
+async function weekCard(goalMl) {
+  const today = db.dayOf();
+  const { days, daysAtGoal } = history(await db.intakesBetween(addDays(today, -6), today), today, 7, goalMl);
+  // Mesma escala do grafico do Historico.
+  const top = Math.max(goalMl, ...days.map((d) => d.totalMl)) * 1.12;
+  const pct = (ml) => `${(ml / top) * 100}%`;
+  const state = (d) => (d.day === today ? ' is-today' : d.totalMl >= goalMl ? ' is-met' : '');
+
+  return html`
+    <a class="card week" href="#/historico" aria-label="Histórico: ${daysAtGoal} dos últimos 7 dias na meta">
+      <span class="week__head">
+        <span class="week__title">Últimos 7 dias</span>
+        <span class="week__more">${daysAtGoal} na meta · histórico ›</span>
+      </span>
+      <span class="week__plot" aria-hidden="true">
+        <span class="week__goal" style="bottom: ${pct(goalMl)}"></span>
+        ${raw(days.map((d) => html`<span class="week__bar${state(d)}" style="height: ${pct(d.totalMl)}"></span>`).join(''))}
+      </span>
+      <span class="week__x" aria-hidden="true">${raw(days.map((d) => html`
+        <span class="${d.day === today ? 'is-today' : ''}">${fmtDay(d.day, { weekday: 'narrow' })}</span>`).join(''))}
+      </span>
+    </a>`;
+}
+
 export async function render(view) {
   setTop({
     title: APP_NAME,
-    actions: html`<a class="icon-btn" href="#/historico" aria-label="Histórico">${raw(CHART)}</a>
-      <a class="icon-btn" href="#/ajustes" aria-label="Ajustes">${raw(GEAR)}</a>`,
+    actions: html`<a class="icon-btn" href="#/ajustes" aria-label="Ajustes">${raw(GEAR)}</a>`,
   });
 
   const settings = db.settings();
@@ -179,6 +202,8 @@ export async function render(view) {
     <button class="btn btn--ghost btn--block" type="button" data-other>Outra quantidade</button>
 
     ${raw(reminderLine(settings, summary, subscribed))}
+
+    ${raw(await weekCard(settings.goalMl))}
 
     <h2 class="section-title">Hoje</h2>
     ${raw(periodList(intakes))}

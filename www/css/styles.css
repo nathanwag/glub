@@ -276,6 +276,28 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .list__time { font-family: inherit; font-weight: 700; font-size: 1.05rem; color: var(--muted); }
 .empty { font-size: var(--fs-sm); }
 
+/* Ultimos 7 dias na tela Hoje: e por aqui que se chega ao Historico. */
+.week { display: block; padding: 14px 14px 12px; color: var(--text); text-decoration: none; }
+.week:active { background: var(--surface-2); }
+.week__head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+.week__title { font-weight: 800; }
+.week__more { font-size: var(--fs-sm); font-weight: 800; color: var(--accent); }
+.week__plot {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 60px;
+  border-bottom: 1px solid var(--border);
+}
+.week__bar { flex: 1; border-radius: 4px 4px 0 0; background: var(--accent); opacity: .45; }
+.week__bar.is-met { opacity: 1; }
+.week__bar.is-today { opacity: 1; background: var(--yellow); outline: 2px solid var(--edge); outline-offset: -2px; }
+.week__goal { position: absolute; left: 0; right: 0; border-top: 1px dashed var(--muted); pointer-events: none; }
+.week__x { display: flex; gap: 8px; margin-top: 6px; }
+.week__x span { flex: 1; text-align: center; font-size: .75rem; font-weight: 800; color: var(--muted); }
+.week__x .is-today { color: var(--text); }
+
 /* Copos de hoje por periodo: so o atual abre sozinho, a lista nao cresce sem fim. */
 .period {
   display: flex;
