@@ -2,7 +2,7 @@
 
 import * as db from '../db.js';
 import * as push from '../push.js';
-import { addDays, daySummary } from '../intake.js';
+import { addDays, daySummary, parseMl } from '../intake.js';
 import { SNOOZE_MIN, nextReminder } from '../reminder.js';
 import * as puffer from '../puffer.js';
 import {
@@ -150,13 +150,33 @@ export async function render(view) {
 }
 
 function pickOther() {
-  const grid = node(html`<div class="amounts">${raw(OTHER_AMOUNTS.map((ml) => html`
-    <button class="btn" type="button" data-ml="${ml}">${fmtMl(ml)}</button>`).join(''))}</div>`);
-  grid.onclick = (e) => {
+  const body = node(html`<div class="stack">
+    <div class="amounts">${raw(OTHER_AMOUNTS.map((ml) => html`
+      <button class="btn" type="button" data-ml="${ml}">${fmtMl(ml)}</button>`).join(''))}</div>
+    <form>
+      <label class="field__k" for="other-ml">Outro valor</label>
+      <div class="row">
+        <span class="input-unit grow">
+          <input class="input" id="other-ml" name="ml" type="text" inputmode="numeric" autocomplete="off" placeholder="ex.: 1000">
+          <span class="input-unit__u">ml</span>
+        </span>
+        <button class="btn btn--primary" type="submit">Adicionar</button>
+      </div>
+    </form>
+  </div>`);
+  body.onclick = (e) => {
     const btn = e.target.closest('[data-ml]');
     if (!btn) return;
     closeSheet();
     drink(Number(btn.dataset.ml));
   };
-  openSheet('Quanto você bebeu?', grid);
+  // Form pra tecla "Ir" do teclado do iPhone tambem adicionar.
+  body.querySelector('form').onsubmit = (e) => {
+    e.preventDefault();
+    const ml = parseMl(e.target.elements.ml.value);
+    if (!ml) { toast('Digite quantos ml você bebeu.'); return; }
+    closeSheet();
+    drink(ml);
+  };
+  openSheet('Quanto você bebeu?', body);
 }
