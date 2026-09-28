@@ -30,7 +30,7 @@ const CHEVRON = raw('<svg class="set-item__chev" viewBox="0 0 24 24" aria-hidden
 function segmented(name, options, value, label) {
   return html`<div class="seg" role="radiogroup" data-seg="${name}">${raw(options.map((opt) => html`
     <button type="button" role="radio" class="seg__opt" data-value="${opt}"
-      aria-checked="${opt === value}">${label(opt)}</button>`).join(''))}</div>`;
+      aria-checked="${String(opt === value)}">${label(opt)}</button>`).join(''))}</div>`;
 }
 
 function item({ href, ico, title, sub }) {
@@ -276,7 +276,7 @@ export async function renderReminders(view) {
         <div>
           <p class="field__k">Dias</p>
           <div class="days">${raw(DAYS.map(([d, letter]) => html`
-            <button type="button" class="day" data-day="${d}" aria-pressed="${s.days.includes(d)}"
+            <button type="button" class="day" data-day="${d}" aria-pressed="${String(s.days.includes(d))}"
               aria-label="${DAY_NAMES[d]}">${letter}</button>`).join(''))}</div>
         </div>
       </div>

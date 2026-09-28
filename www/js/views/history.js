@@ -51,7 +51,7 @@ export async function render(view, params) {
 
   view.innerHTML = html`
     <div class="seg" role="radiogroup" aria-label="Período">${raw(PERIODS.map((p) => html`
-      <button type="button" role="radio" class="seg__opt" data-period="${p}" aria-checked="${p === n}">${p} dias</button>`).join(''))}
+      <button type="button" role="radio" class="seg__opt" data-period="${p}" aria-checked="${String(p === n)}">${p} dias</button>`).join(''))}
     </div>
 
     <div class="stats">

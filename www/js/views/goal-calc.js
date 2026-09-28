@@ -30,7 +30,7 @@ const numField = (name, label, unit, value, { decimal = false } = {}) => html`
 function segmented(name, options, value) {
   return html`<div class="seg" role="radiogroup" data-seg="${name}">${raw(options.map(([v, label]) => html`
     <button type="button" role="radio" class="seg__opt" data-value="${v}"
-      aria-checked="${v === value}">${label}</button>`).join(''))}</div>`;
+      aria-checked="${String(v === value)}">${label}</button>`).join(''))}</div>`;
 }
 
 function resultHtml(estimate) {
