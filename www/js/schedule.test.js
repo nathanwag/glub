@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  dayTimeline, daysLabel, intervalLabel, remindersSummary,
+  dayTimeline, daysLabel, remindersSummary,
 } from './schedule.js';
 
 test('a semana inteira vira "todos os dias", em qualquer ordem', () => {
@@ -19,22 +19,12 @@ test('dias soltos, ou so dois seguidos, viram lista', () => {
   assert.equal(daysLabel([2]), 'ter');
 });
 
-test('intervalo abaixo de uma hora fica em minutos; acima, em horas com virgula', () => {
-  assert.equal(intervalLabel(45), '45 min');
-  assert.equal(intervalLabel(60), '1 h');
-  assert.equal(intervalLabel(90), '1,5 h');
-});
-
 const config = {
-  start: '08:00', end: '22:00', intervalMin: 60, days: [1, 2, 3, 4, 5], stopAtGoal: true, dayStart: '05:00',
+  goalMl: 2000, start: '08:00', end: '22:00', days: [1, 2, 3, 4, 5], dayStart: '05:00',
 };
 
-test('o resumo dos lembretes cabe numa linha: frequencia, janela, dias e meta', () => {
-  assert.equal(remindersSummary(config), 'A cada 1 h, das 08:00 às 22:00 · seg a sex · para na meta');
-});
-
-test('sem parar na meta, o resumo nao fala da meta', () => {
-  assert.equal(remindersSummary({ ...config, stopAtGoal: false }), 'A cada 1 h, das 08:00 às 22:00 · seg a sex');
+test('o resumo dos lembretes cabe numa linha: regra, janela e dias', () => {
+  assert.equal(remindersSummary(config), 'Só se atrasar · das 08:00 às 22:00 · seg a sex');
 });
 
 test('na linha do dia, a janela e a fracao das 24 h contada a partir da virada', () => {
@@ -43,8 +33,8 @@ test('na linha do dia, a janela e a fracao das 24 h contada a partir da virada',
   assert.equal(t.to, 0.75);
 });
 
-test('a linha do dia marca cada lembrete possivel; o do horario final nao sai', () => {
-  const t = dayTimeline({ ...config, dayStart: '02:00', start: '08:00', end: '20:00', intervalMin: 180 });
-  // 08:00, 11:00, 14:00 e 17:00; as 20:00 a janela ja fechou (reminder.js: next < end).
-  assert.deepEqual(t.reminders, [0.25, 0.375, 0.5, 0.625]);
+test('a linha do dia marca o meio e a reta final de cada periodo', () => {
+  const t = dayTimeline({ ...config, dayStart: '00:00', start: '06:00', end: '21:00' });
+  // Manha 09:00 e 11:15, tarde 15:00 e 17:15, noite (18-21) 19:30 e 20:15.
+  assert.deepEqual(t.reminders, [0.375, 0.46875, 0.625, 0.71875, 0.8125, 0.84375]);
 });

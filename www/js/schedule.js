@@ -1,6 +1,8 @@
 /* Textos e desenho dos ajustes de lembrete. Puro: o settings.js monta a tela
  * com isto, e os testes rodam sob node. */
 
+import { nudgePoints } from './reminder.js';
+
 // Semana comecando na segunda; o valor e o de Date#getDay.
 const WEEK = [1, 2, 3, 4, 5, 6, 0];
 const SHORT = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
@@ -15,11 +17,8 @@ export function daysLabel(days) {
   return names.length === 1 ? names[0] : `${names.slice(0, -1).join(', ')} e ${names.at(-1)}`;
 }
 
-export const intervalLabel = (min) => (min < 60 ? `${min} min` : `${min / 60} h`.replace('.', ','));
-
 export function remindersSummary(config) {
-  return `A cada ${intervalLabel(config.intervalMin)}, das ${config.start} às ${config.end}`
-    + ` · ${daysLabel(config.days)}${config.stopAtGoal ? ' · para na meta' : ''}`;
+  return `Só se atrasar · das ${config.start} às ${config.end} · ${daysLabel(config.days)}`;
 }
 
 const toMinutes = (hhmm) => {
@@ -31,10 +30,10 @@ const toMinutes = (hhmm) => {
 export function dayTimeline(config) {
   const origin = toMinutes(config.dayStart ?? '00:00');
   const at = (minutes) => (minutes - origin) / 1440;
-  const start = toMinutes(config.start);
-  const end = toMinutes(config.end);
-  // O maximo do dia: cada copo empurra o proximo lembrete pra frente.
-  const reminders = [];
-  for (let m = start; m < end; m += config.intervalMin) reminders.push(at(m));
-  return { from: at(start), to: at(end), reminders };
+  return {
+    from: at(toMinutes(config.start)),
+    to: at(toMinutes(config.end)),
+    // O maximo do dia: quem esta no ritmo nao recebe nenhum.
+    reminders: nudgePoints(config).map((p) => at(p.at)),
+  };
 }

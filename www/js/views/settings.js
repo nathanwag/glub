@@ -3,15 +3,12 @@
 import * as db from '../db.js';
 import * as push from '../push.js';
 import { daySummary, parseMl } from '../intake.js';
-import { configError, nextReminder } from '../reminder.js';
-import {
-  dayTimeline, intervalLabel, remindersSummary,
-} from '../schedule.js';
+import { configError, nextReminder, nudgePoints } from '../reminder.js';
+import { dayTimeline, remindersSummary } from '../schedule.js';
 import {
   html, raw, setTop, toast, isIOS, isStandalone, fmtMl, refresh, APP_NAME,
 } from '../ui.js';
 
-const INTERVALS = [30, 45, 60, 90, 120];
 // Semana comecando na segunda; o valor e o de Date#getDay.
 const DAYS = [[1, 'S'], [2, 'T'], [3, 'Q'], [4, 'Q'], [5, 'S'], [6, 'S'], [0, 'D']];
 const DAY_NAMES = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
@@ -26,12 +23,6 @@ const ICON = {
 };
 const icon = (name) => raw(`<svg viewBox="0 0 24 24" aria-hidden="true">${ICON[name]}</svg>`);
 const CHEVRON = raw('<svg class="set-item__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>');
-
-function segmented(name, options, value, label) {
-  return html`<div class="seg" role="radiogroup" data-seg="${name}">${raw(options.map((opt) => html`
-    <button type="button" role="radio" class="seg__opt" data-value="${opt}"
-      aria-checked="${String(opt === value)}">${label(opt)}</button>`).join(''))}</div>`;
-}
 
 function item({ href, ico, title, sub }) {
   return html`
@@ -162,18 +153,12 @@ async function runAction(action, control) {
 
 /* ---------- Subtelas ---------- */
 
-// Cliques comuns das subtelas: segmentos, dias e stepper da meta.
+// Cliques comuns das subtelas: dias e stepper da meta.
 async function onSettingClick(e) {
   const goal = e.target.closest('[data-goal]');
   if (goal) {
     const goalMl = Math.max(250, db.settings().goalMl + Number(goal.dataset.goal));
     if (await save({ goalMl })) refresh();
-    return;
-  }
-  const opt = e.target.closest('.seg__opt');
-  if (opt) {
-    const key = opt.closest('[data-seg]').dataset.seg;
-    if (await save({ [key]: Number(opt.dataset.value) })) refresh();
     return;
   }
   const day = e.target.closest('[data-day]');
@@ -236,6 +221,12 @@ function timelineLabels(s, t) {
     <span class="tl__label${edge ? ` tl__label--${edge}` : ''}" style="left: ${at * 100}%">${text}</span>`).join('');
 }
 
+// "550 ml até 12:00, 1.450 ml até 18:00 e 2.000 ml até 22:00"
+function checkpoints(s) {
+  const ends = nudgePoints(s).filter((p) => p.kind === 'fim').map((p) => `${fmtMl(p.targetMl)} até ${p.until}`);
+  return ends.length === 1 ? ends[0] : `${ends.slice(0, -1).join(', ')} e ${ends.at(-1)}`;
+}
+
 function timeline(s) {
   const t = dayTimeline(s);
   const n = t.reminders.length;
@@ -251,8 +242,8 @@ function timeline(s) {
       </div>
       <div class="tl__labels">${raw(timelineLabels(s, t))}</div>
     </div>
-    <p class="hint">Até ${n} ${n === 1 ? 'lembrete' : 'lembretes'} por dia. Cada um espera
-    ${intervalLabel(s.intervalMin)} desde o último copo: quem acabou de beber não é lembrado.</p>`;
+    <p class="hint">Até ${n} avisos por dia, no meio e na reta final de cada período. Cada um
+    só sai se você estiver abaixo da meta: ${checkpoints(s)}.</p>`;
 }
 
 export async function renderReminders(view) {
@@ -281,20 +272,6 @@ export async function renderReminders(view) {
         </div>
       </div>
     </section>
-
-    <section class="sec">
-      <h2 class="section-title">Frequência</h2>
-      <div class="card card__pad stack">
-        <div>
-          <p class="field__k">A cada</p>
-          ${raw(segmented('intervalMin', INTERVALS, s.intervalMin, intervalLabel))}
-        </div>
-        <label class="set-row">
-          <span>Parar quando bater a meta</span>
-          <input class="switch" type="checkbox" name="stopAtGoal" ${s.stopAtGoal ? 'checked' : ''}>
-        </label>
-      </div>
-    </section>
   `;
 
   view.onclick = onSettingClick;
@@ -304,8 +281,6 @@ export async function renderReminders(view) {
       // Redesenha pra linha do dia acompanhar; na recusa, volta o valor salvo.
       if (await save({ [name]: e.target.value })) refresh();
       else e.target.value = db.settings()[name];
-    } else if (name === 'stopAtGoal') {
-      await save({ stopAtGoal: e.target.checked });
     }
   };
 }

@@ -63,6 +63,13 @@ npm run dev:worker               # wrangler dev: app + API + cron (precisa de wo
   em cada copo (índice `by_day`), então mudar a virada chama
   `db.rekeyIntakes()`. A janela dos lembretes continua no dia de calendário, e
   `configError` exige `start >= dayStart`. Config sem `dayStart` vale `00:00`.
+- **Os avisos saem por período, e só pra quem está atrasado.** A janela é
+  cortada em manhã (até 12h), tarde (até 18h) e noite (até `end`), e a meta
+  se divide pelas horas de cada um, acumulada e arredondada em 50 ml
+  (`nudgePoints`). Cada período avisa no meio e 45 min antes do fim, se o
+  total do dia estiver abaixo do esperado ali. Cada momento sai uma vez só
+  (`lastSentAt`), e um momento perdido é substituído pelo seguinte. Não há
+  mais `intervalMin` nem `stopAtGoal`.
 - **`DB_NAME = 'gole'` não muda.** Trocar o nome abre um banco vazio.
 - **O `html` do `ui.js` apaga `false`.** `aria-expanded="${open}"` com `open`
   falso vira `aria-expanded=""`. Atributo booleano passa por `String(valor)`.
@@ -86,7 +93,8 @@ npm run dev:worker               # wrangler dev: app + API + cron (precisa de wo
 ## Testes
 
 Só os módulos puros e o Worker são testados. Os seams são:
-- `reminder.js`: `isDue`, `nextReminder`, `configError`, `dayOf`
+- `reminder.js`: `isDue`/`dueNudge`, `nextReminder`, `nudgePoints`,
+  `configError`, `dayOf`
 - `intake.js`: `daySummary`, `history` (totais por dia, média só dos dias
   com registro, dias na meta e sequência, onde hoje incompleto não quebra a
   sequência) e `atLocal(day, 'HH:MM', tz, dayStart)`, que dá o instante de
@@ -95,8 +103,8 @@ Só os módulos puros e o Worker são testados. Os seams são:
   `byPeriod(intakes, tz, now)` agrupa os copos de hoje em manhã (05h), tarde
   (12h) e noite (18h às 05h), com total e `when` (past/now/future)
 - `schedule.js`: textos e linha do dia dos Ajustes. `daysLabel`,
-  `intervalLabel`, `remindersSummary` e `dayTimeline(config)` (janela e cada
-  lembrete possível, de 0 a 1, numa barra de 24 h que começa em `dayStart`)
+  `remindersSummary` e `dayTimeline(config)` (janela e cada aviso possível,
+  de 0 a 1, numa barra de 24 h que começa em `dayStart`)
 - `hydration.js`: `estimateWater(profile)`. A conta principal usa ml/kg por
   faixa de idade (40, 35, 30 e 25), mais exercício (500 ml/h, o piso do ACSM),
   calor (+500) e gestação ou amamentação (+300/+700, EFSA). Também compara com
