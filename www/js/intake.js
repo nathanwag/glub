@@ -69,3 +69,24 @@ export function parseMl(text) {
   const ml = Number(String(text).replace(/\D/g, ''));
   return ml > 0 ? ml : null;
 }
+
+// Limites em minutos locais. Noite e o resto: 18h ate 05h do dia seguinte.
+const PERIODS = [
+  { id: 'manha', label: 'Manhã', range: '05h às 12h', from: 5 * 60, to: 12 * 60 },
+  { id: 'tarde', label: 'Tarde', range: '12h às 18h', from: 12 * 60, to: 18 * 60 },
+  { id: 'noite', label: 'Noite', range: '18h às 05h' },
+];
+
+const periodOf = (minutes) => PERIODS.find((p) => p.id === 'noite' || (minutes >= p.from && minutes < p.to));
+
+/** Copos do dia agrupados em manha, tarde e noite (sempre os tres), cada um
+ *  marcado como 'past', 'now' ou 'future' em relacao a `now`. */
+export function byPeriod(intakes, tz, now) {
+  const current = PERIODS.indexOf(periodOf(localParts(now, tz).minutes));
+  return PERIODS.map(({ id, label, range }, index) => {
+    const mine = intakes.filter((i) => periodOf(localParts(new Date(i.at), tz).minutes).id === id)
+      .sort((a, b) => (a.at < b.at ? 1 : -1));
+    const when = index < current ? 'past' : index === current ? 'now' : 'future';
+    return { id, label, range, when, totalMl: mine.reduce((sum, i) => sum + i.ml, 0), intakes: mine };
+  });
+}

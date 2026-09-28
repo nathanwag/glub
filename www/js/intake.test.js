@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  atLocal, daySummary, history, parseMl,
+  atLocal, byPeriod, daySummary, history, parseMl,
 } from './intake.js';
 
 test('o resumo do dia soma os copos e aponta o ultimo, fora de ordem ou nao', () => {
@@ -90,4 +90,44 @@ test('vazio, zero ou sem numero nao e quantidade', () => {
   assert.equal(parseMl(''), null);
   assert.equal(parseMl('0'), null);
   assert.equal(parseMl('ml'), null);
+});
+
+// Sao Paulo e UTC-3: 10:10Z e 07:10 local.
+const SP = 'America/Sao_Paulo';
+const drank = (id, ml, at) => ({ id, ml, at });
+
+test('os copos se agrupam em manha, tarde e noite pelo horario local, com o total de cada', () => {
+  const periods = byPeriod([
+    drank(1, 200, '2026-09-28T10:10:00.000Z'), // 07:10
+    drank(2, 250, '2026-09-28T11:40:00.000Z'), // 08:40
+    drank(3, 300, '2026-09-28T15:45:00.000Z'), // 12:45
+  ], SP, new Date('2026-09-28T17:10:00.000Z'));
+  assert.deepEqual(periods.map((p) => [p.id, p.totalMl, p.intakes.length]), [
+    ['manha', 450, 2], ['tarde', 300, 1], ['noite', 0, 0],
+  ]);
+});
+
+test('das 18h em diante e a madrugada ate as 05h contam como noite', () => {
+  const periods = byPeriod([
+    drank(1, 200, '2026-09-28T21:00:00.000Z'), // 18:00
+    drank(2, 300, '2026-09-29T05:30:00.000Z'), // 02:30
+    drank(3, 100, '2026-09-29T08:00:00.000Z'), // 05:00, ja e manha
+  ], SP, new Date('2026-09-29T05:40:00.000Z'));
+  assert.deepEqual(periods.map((p) => p.totalMl), [100, 0, 500]);
+});
+
+test('cada periodo sabe se ja passou, se e o atual ou se ainda vem', () => {
+  const at = (iso) => byPeriod([], SP, new Date(iso)).map((p) => p.when);
+  assert.deepEqual(at('2026-09-28T17:10:00.000Z'), ['past', 'now', 'future']); // 14:10
+  assert.deepEqual(at('2026-09-28T11:00:00.000Z'), ['now', 'future', 'future']); // 08:00
+  assert.deepEqual(at('2026-09-29T05:40:00.000Z'), ['past', 'past', 'now']); // 02:40
+});
+
+test('dentro do periodo, o copo mais recente vem primeiro', () => {
+  const [manha] = byPeriod([
+    drank(1, 200, '2026-09-28T10:10:00.000Z'),
+    drank(2, 250, '2026-09-28T13:40:00.000Z'),
+    drank(3, 150, '2026-09-28T11:40:00.000Z'),
+  ], SP, new Date('2026-09-28T14:00:00.000Z'));
+  assert.deepEqual(manha.intakes.map((i) => i.id), [2, 3, 1]);
 });

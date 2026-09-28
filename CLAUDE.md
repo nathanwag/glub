@@ -74,7 +74,9 @@ Só os módulos puros e o Worker são testados. Os seams são:
   com registro, dias na meta e sequência, onde hoje incompleto não quebra a
   sequência) e `atLocal(day, 'HH:MM', tz, dayStart)`, que dá o instante de
   um copo lançado num dia passado (antes da virada, é a madrugada seguinte).
-  `parseMl(texto)` lê a quantidade digitada (copo nos Ajustes, "Outro valor")
+  `parseMl(texto)` lê a quantidade digitada (copo nos Ajustes, "Outro valor").
+  `byPeriod(intakes, tz, now)` agrupa os copos de hoje em manhã (05h), tarde
+  (12h) e noite (18h às 05h), com total e `when` (past/now/future)
 - `schedule.js`: textos e linha do dia dos Ajustes. `daysLabel`,
   `intervalLabel`, `remindersSummary` e `dayTimeline(config)` (janela e cada
   lembrete possível, de 0 a 1, numa barra de 24 h que começa em `dayStart`)
