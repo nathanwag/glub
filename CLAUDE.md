@@ -64,7 +64,24 @@ npm run dev:worker               # wrangler dev: app + API + cron (precisa de wo
   `db.rekeyIntakes()`. A janela dos lembretes continua no dia de calendário, e
   `configError` exige `start >= dayStart`. Config sem `dayStart` vale `00:00`.
 - **`DB_NAME = 'gole'` não muda.** Trocar o nome abre um banco vazio.
+- **O `html` do `ui.js` apaga `false`.** `aria-expanded="${open}"` com `open`
+  falso vira `aria-expanded=""`. Atributo booleano passa por `String(valor)`.
 - **Arquivos `*.test.js` não são publicados** (`www/.assetsignore`).
+
+## Telas
+
+- `#/` **Hoje** (`views/today.js`): baiacu, botão do copo (`glassMl`),
+  "Outra quantidade" (atalhos e campo livre), card dos últimos 7 dias e os
+  copos de hoje por período (`byPeriod`, só o atual aberto). O card é a
+  entrada do Histórico: de propósito, não há ícone dele no topo, só a
+  engrenagem.
+- `#/historico` e `#/dia?d=AAAA-MM-DD`: gráfico, totais e copos esquecidos.
+- `#/ajustes` (`views/settings.js`): índice com o liga/desliga dos lembretes
+  e uma linha de resumo por grupo. As subtelas são `/ajustes/meta`,
+  `/ajustes/lembretes` (com a barra do dia), `/ajustes/virada` e
+  `/ajustes/servidor` (token). `#/meta` é a calculadora e volta pra
+  `/ajustes/meta`.
+- `#/bebi?lembrete=` é o toque na notificação (registra e cai no Hoje).
 
 ## Testes
 

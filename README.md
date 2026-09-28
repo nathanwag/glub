@@ -6,10 +6,17 @@ horários são configurados no próprio app.
 
 - **Lembrete inteligente.** O intervalo conta a partir do último copo
   registrado, então quem acabou de beber não é lembrado.
-- **Configurável:** meta diária, tamanho do copo, janela de horário (ex.:
-  08:00–22:00), intervalo (30 min a 2 h), dias da semana e a opção de parar
-  quando bater a meta.
-- **Calcular minha meta** (em Ajustes): estima quanto beber por dia a partir
+- **Tela Hoje:** o baiacu infla conforme a meta. Um toque no botão amarelo
+  registra o seu copo ou garrafa, e "Outra quantidade" tem atalhos e um campo
+  pra qualquer valor. Os copos do dia aparecem agrupados em manhã, tarde e
+  noite, com só o período atual aberto. Um card com os últimos 7 dias leva ao
+  **Histórico** (média, dias na meta, sequência e copos esquecidos em dias
+  passados).
+- **Configurável:** meta diária, tamanho do copo ou garrafa (qualquer valor em
+  ml, ex.: 510), janela de horário (ex.: 08:00–22:00), intervalo (30 min a
+  2 h), dias da semana, a opção de parar quando bater a meta e a hora em que
+  o dia vira (ex.: 05:00, pra madrugada contar no dia anterior).
+- **Calcular minha meta** (em Ajustes › Meta): estima quanto beber por dia a partir
   do peso e da idade. É a regra de ml por kg das calculadoras brasileiras (40,
   35, 30 ou 25 ml conforme a faixa). Exercício, calor, gestação ou
   amamentação, altura e sexo são opcionais. Os dois últimos habilitam a
@@ -60,20 +67,25 @@ envio.
    1. Abra a URL no **Safari** e toque em **Compartilhar › Adicionar à Tela de
       Início**.
    2. Abra o Glub **pelo ícone**. Push só funciona no app instalado.
-   3. Vá em **Ajustes**, cole o `APP_TOKEN` e toque em **Ativar lembretes**.
-      Aceite a permissão de notificação.
-   4. Toque em **Testar**. A notificação deve chegar em segundos.
+   3. Vá em **Ajustes › Servidor** e cole o `APP_TOKEN`.
+   4. Volte pra **Ajustes** e ligue a chave **Lembretes**, no topo. Aceite a
+      permissão de notificação.
+   5. Toque em **Mandar notificação de teste**. Ela deve chegar em segundos.
+
+Os horários ficam em **Ajustes › Quando lembrar**, com uma barra do dia que
+mostra a janela e cada lembrete possível.
 
 Tocar na notificação já registra um copo: o iOS não mostra botões em web push.
 O app abre com a opção **Não bebi · adiar 10 min** (apaga o copo e lembra de
-novo em 10 a 15 min) e **Desfazer**. Isso vale também pro **Testar**.
+novo em 10 a 15 min) e **Desfazer**. Isso vale também pra notificação de
+teste.
 
 Requer iOS 16.4 ou mais novo.
 
 ## Desenvolvimento
 
 ```bash
-npm test             # testes (node --test): regra dos lembretes, cron, API
+npm test             # testes (node --test): regra dos lembretes, contas do dia, textos dos Ajustes, cron, API
 npm run dev          # só a interface, com live reload (/phone = moldura de celular)
 npm run dev:worker   # app + API + cron em http://localhost:8787 (wrangler dev)
 ```
