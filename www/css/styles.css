@@ -451,6 +451,77 @@ li + li > .list__row--link { border-top: 1px solid var(--border); }
 .switch:checked::after { transform: translateX(20px); }
 
 .set-row--link { color: var(--text); text-decoration: none; }
+.set-row--tight { min-height: 0; }
+
+/* Indice: cada linha resume um grupo e abre a subtela dele. */
+.set-master { display: flex; align-items: center; gap: 12px; min-height: var(--tap); }
+.set-master__title { font-size: 1.05rem; font-weight: 800; }
+.set-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 12px 10px 14px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.set-item + .set-item { border-top: 1px solid var(--border); }
+.set-item:active { background: var(--surface-2); }
+.set-item__ico {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.set-item__ico svg { width: 20px; height: 20px; }
+.set-item__ico--yellow { background: var(--yellow); color: var(--on-yellow); }
+.set-item__text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.set-item__title { font-weight: 700; }
+.set-item__title--accent { color: var(--accent); }
+.set-item__sub { font-size: var(--fs-sm); color: var(--muted); line-height: 1.3; }
+.set-item__chev { flex: none; width: 18px; height: 18px; color: var(--muted); }
+
+/* Linha do dia (Lembretes): 24 h a partir da virada, janela e cada lembrete. */
+.tl__bar { position: relative; height: 38px; border-radius: 10px; background: var(--surface-2); }
+.tl__win {
+  position: absolute;
+  inset: 0 auto 0 auto;
+  border: 2px solid var(--accent);
+  border-radius: 10px;
+  background: var(--accent-soft);
+}
+.tl__tick {
+  position: absolute;
+  top: 10px;
+  width: 3px;
+  height: 18px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.tl__labels { position: relative; height: 18px; margin-top: 6px; }
+.tl__label {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.tl__label--start { transform: none; }
+.tl__label--end { transform: translateX(-100%); }
 
 /* ---------- Calcular meta ---------- */
 

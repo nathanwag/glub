@@ -60,7 +60,7 @@ function renderResult() {
 }
 
 export async function render(view) {
-  setTop({ title: 'Calcular meta', back: '#/ajustes' });
+  setTop({ title: 'Calcular meta', back: '#/ajustes/meta' });
   const p = profile();
 
   view.innerHTML = html`
@@ -137,7 +137,7 @@ export async function render(view) {
       await db.saveSettings({ goalMl: totalMl });
       push.sync().catch(() => {});
       toast(`Meta diária: ${fmtMl(totalMl)}`);
-      location.hash = '#/ajustes';
+      location.hash = '#/ajustes/meta';
     }
   };
 }

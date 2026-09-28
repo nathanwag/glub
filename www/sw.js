@@ -4,7 +4,7 @@
  * arquivos cache-primeiro com revalidacao. Bumpar VERSION e como se deploya.
  */
 
-const VERSION = 'glub-v7';
+const VERSION = 'glub-v8';
 
 // Em localhost o cache atrapalha mais do que ajuda; o SW fica transparente
 // (mas continua exibindo push, pra testar notificacao no desktop).
@@ -24,6 +24,7 @@ const ASSETS = [
   './js/intake.js',
   './js/reminder.js',
   './js/hydration.js',
+  './js/schedule.js',
   './js/puffer.js',
   './js/views/today.js',
   './js/views/settings.js',

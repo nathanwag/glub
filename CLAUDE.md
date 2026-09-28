@@ -74,6 +74,9 @@ Só os módulos puros e o Worker são testados. Os seams são:
   com registro, dias na meta e sequência, onde hoje incompleto não quebra a
   sequência) e `atLocal(day, 'HH:MM', tz, dayStart)`, que dá o instante de
   um copo lançado num dia passado (antes da virada, é a madrugada seguinte)
+- `schedule.js`: textos e linha do dia dos Ajustes. `daysLabel`,
+  `intervalLabel`, `remindersSummary` e `dayTimeline(config)` (janela e cada
+  lembrete possível, de 0 a 1, numa barra de 24 h que começa em `dayStart`)
 - `hydration.js`: `estimateWater(profile)`. A conta principal usa ml/kg por
   faixa de idade (40, 35, 30 e 25), mais exercício (500 ml/h, o piso do ACSM),
   calor (+500) e gestação ou amamentação (+300/+700, EFSA). Também compara com

@@ -12,6 +12,10 @@ import * as day from './views/day.js';
 const ROUTES = {
   '/': today.render,
   '/ajustes': settings.render,
+  '/ajustes/meta': settings.renderGoal,
+  '/ajustes/lembretes': settings.renderReminders,
+  '/ajustes/virada': settings.renderDayStart,
+  '/ajustes/servidor': settings.renderServer,
   '/meta': goalCalc.render,
   '/bebi': today.drinkFromReminder,
   '/historico': historyView.render,
