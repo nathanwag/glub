@@ -1,6 +1,6 @@
-# Gole
+# Glub
 
-Lembrete de beber água no iPhone. É um app web instalado na Tela de Início,
+Lembrete de beber água no iPhone, com um baiacu que vai inflando a cada copo. É um app web instalado na Tela de Início,
 que recebe notificações push ao longo do dia. Você registra cada copo, e os
 horários são configurados no próprio app.
 
@@ -59,7 +59,7 @@ envio.
 5. **iPhone:**
    1. Abra a URL no **Safari** e toque em **Compartilhar › Adicionar à Tela de
       Início**.
-   2. Abra o Gole **pelo ícone**. Push só funciona no app instalado.
+   2. Abra o Glub **pelo ícone**. Push só funciona no app instalado.
    3. Vá em **Ajustes**, cole o `APP_TOKEN` e toque em **Ativar lembretes**.
       Aceite a permissão de notificação.
    4. Toque em **Testar**. A notificação deve chegar em segundos.

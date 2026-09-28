@@ -2,7 +2,8 @@
 
 ## O que é
 
-**Gole**: lembrete de beber água no iPhone. Tem duas metades num repo só.
+**Glub**: lembrete de beber água no iPhone (o app se chamava Gole, e o nome
+ainda aparece no banco e no repo). Tem duas metades num repo só.
 
 - **`www/`** é uma PWA em JavaScript puro, sem build, no padrão do
   `../gym_tracker` (Anilha). Usa hash routing, IndexedDB isolado em `db.js`,
@@ -31,7 +32,7 @@ npm run dev:worker               # wrangler dev: app + API + cron (precisa de wo
   precisa continuar **puro e sem imports**, e nunca usar getters locais de
   `Date`, porque o Worker roda em UTC. Tudo passa por `localParts(date, tz)`.
 - **Toda alteração em `www/` exige bumpar `VERSION` em `www/sw.js`**
-  (`gole-vN`). O cache é cache-first. Sem o bump, o app instalado continua
+  (`glub-vN`). O cache é cache-first. Sem o bump, o app instalado continua
   servindo os arquivos antigos.
 - **Todo push precisa mostrar uma notificação.** O iOS revoga a assinatura de
   quem recebe push silencioso. O payload usa o formato do Declarative Web
@@ -87,8 +88,16 @@ KV e `send` são fakes, e o push service é a única fronteira mockada. `db.js`,
 
 ## Visual
 
-Os tokens de cor são os do gym_tracker, com o accent em azul-água (`#1668b8`
-no claro, `#4aa3ff` no escuro), e o app segue o tema do sistema. Manrope é a
-fonte da interface, e Barlow Condensed 700 é a dos números e rótulos em caixa
-alta. Inputs usam 16px (abaixo disso o Safari dá zoom). Caminhos são sempre
-relativos, e nada é carregado de fora.
+O mascote é um baiacu, e ele é o medidor da meta: `www/js/puffer.js` desenha
+o SVG inflado conforme o progresso do dia (`mount` anima na tela Hoje e
+engole a cada copo, `still` é a versão parada). Os ícones saem do mesmo
+desenho: depois de mexer no peixe, rode `node scripts/icons.mjs`. O estilo
+global de `svg` (ícones de traço) não pode vazar pro peixe; `.fish svg`
+desfaz isso.
+
+A paleta é água clara no tema claro e fundo do mar no escuro, com o accent
+azul (`#1778bd` / `#5cc4ff`) e o amarelo do baiacu (`#ffc53d`) nos botões
+principais, com borda e sombra dura de adesivo. O app segue o tema do
+sistema. Figtree é a fonte da interface, e Bagel Fat One (só peso 400) é a
+dos números e do título. Inputs usam 16px (abaixo disso o Safari dá zoom).
+Caminhos são sempre relativos, e nada é carregado de fora.

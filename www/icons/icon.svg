@@ -1,1 +1,71 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#1668b8"/><path d="M32 11C32 11 17 29 17 39a15 15 0 0 0 30 0C47 29 32 11 32 11z" fill="#fff"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+  <radialGradient id="pf1b" cx="38%" cy="30%" r="75%">
+    <stop offset="0" stop-color="#fff3c4"/><stop offset=".45" stop-color="#ffd24f"/><stop offset="1" stop-color="#f4a321"/>
+  </radialGradient>
+  <linearGradient id="pf1belly" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fff6d8" stop-opacity="0"/><stop offset=".35" stop-color="#fff6d8" stop-opacity=".95"/><stop offset="1" stop-color="#ffe7a8"/>
+  </linearGradient>
+  <linearGradient id="pf1sp" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#ffd566"/><stop offset="1" stop-color="#ee9b1b"/>
+  </linearGradient>
+  <linearGradient id="pf1fin" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#ff9a52"/><stop offset="1" stop-color="#ffc07a"/>
+  </linearGradient>
+  <radialGradient id="pf1eye" cx="40%" cy="35%" r="70%">
+    <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e3edf5"/>
+  </radialGradient>
+  <radialGradient id="pf1iris" cx="40%" cy="35%" r="70%">
+    <stop offset="0" stop-color="#34497a"/><stop offset="1" stop-color="#0d1730"/>
+  </radialGradient>
+  <filter id="pf1blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="pf1soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/></filter>
+    <linearGradient id="pf1bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#57c9f6"/><stop offset="1" stop-color="#0f6db6"/></linearGradient>
+    <radialGradient id="pf1glow" cx="50%" cy="45%" r="50%"><stop offset="0" stop-color="#bff0ff" stop-opacity=".55"/><stop offset="1" stop-color="#bff0ff" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="128" height="128" fill="url(#pf1bg)"/>
+  <circle cx="64" cy="62" r="56" fill="url(#pf1glow)"/>
+  <g fill="#fff" fill-opacity=".25"><circle cx="18" cy="30" r="5"/><circle cx="30" cy="106" r="3.5"/><circle cx="106" cy="22" r="4"/><circle cx="112" cy="100" r="5"/><circle cx="14" cy="72" r="3"/></g>
+  <g transform="translate(62 66) scale(.72)">
+  <g transform="translate(0 2.1) rotate(1.1)">
+    <g transform="translate(-47.0 0) rotate(10.7)">
+      <path d="M0 -8 C-10 -11 -18 -25 -31 -25 C-27 -13 -25 -5 -28 0 C-25 5 -27 13 -31 25 C-18 25 -10 11 0 8Z" fill="url(#pf1fin)" stroke="#f08a3c" stroke-width="1.2" stroke-linejoin="round"/>
+      <path d="M-5 -4 L-23 -17 M-5 0 L-24 0 M-5 4 L-23 17" stroke="#fff" stroke-opacity=".45" stroke-width="2" stroke-linecap="round"/>
+    </g>
+    <g fill="url(#pf1sp)" stroke="#e8951b" stroke-width="1" stroke-linejoin="round"><path d="M-45.2 -24.3 L-55.2 -36.6 Q-58.0 -40.0 -53.8 -38.6 L-38.8 -33.6Z"/><path d="M-38.0 -34.4 L-44.8 -48.7 Q-46.8 -52.8 -43.0 -50.4 L-29.6 -41.9Z"/><path d="M-28.7 -42.5 L-31.9 -58.0 Q-32.8 -62.4 -29.7 -59.2 L-18.7 -47.8Z"/><path d="M-17.7 -48.2 L-17.0 -64.0 Q-16.9 -68.5 -14.6 -64.6 L-6.7 -50.9Z"/><path d="M-5.6 -51.0 L-1.2 -66.2 Q0.0 -70.5 1.2 -66.2 L5.6 -51.0Z"/><path d="M6.7 -50.9 L14.6 -64.6 Q16.9 -68.5 17.0 -64.0 L17.7 -48.2Z"/><path d="M18.7 -47.8 L29.7 -59.2 Q32.8 -62.4 31.9 -58.0 L28.7 -42.5Z"/><path d="M29.6 -41.9 L43.0 -50.4 Q46.8 -52.8 44.8 -48.7 L38.0 -34.4Z"/><path d="M38.0 34.4 L44.8 48.7 Q46.8 52.8 43.0 50.4 L29.6 41.9Z"/><path d="M28.7 42.5 L31.9 58.0 Q32.8 62.4 29.7 59.2 L18.7 47.8Z"/><path d="M17.7 48.2 L17.0 64.0 Q16.9 68.5 14.6 64.6 L6.7 50.9Z"/><path d="M5.6 51.0 L1.2 66.2 Q0.0 70.5 -1.2 66.2 L-5.6 51.0Z"/><path d="M-6.7 50.9 L-14.6 64.6 Q-16.9 68.5 -17.0 64.0 L-17.7 48.2Z"/><path d="M-18.7 47.8 L-29.7 59.2 Q-32.8 62.4 -31.9 58.0 L-28.7 42.5Z"/><path d="M-29.6 41.9 L-43.0 50.4 Q-46.8 52.8 -44.8 48.7 L-38.0 34.4Z"/><path d="M-38.8 33.6 L-53.8 38.6 Q-58.0 40.0 -55.2 36.6 L-45.2 24.3Z"/></g>
+    <clipPath id="pf1c"><ellipse rx="54.0" ry="54.0"/></clipPath>
+    <ellipse rx="54.0" ry="54.0" fill="url(#pf1b)"/>
+    <g clip-path="url(#pf1c)">
+      <ellipse cx="-2.2" cy="35.6" rx="55.1" ry="33.5" fill="url(#pf1belly)"/>
+      <g fill="#ee9b1b" opacity=".38" filter="url(#pf1soft)">
+        <ellipse cx="-16.2" cy="-31.3" rx="4.9" ry="3.8"/><ellipse cx="-32.4" cy="-11.9" rx="4.3" ry="3.5"/><ellipse cx="-1.1" cy="-43.2" rx="3.8" ry="3.0"/><ellipse cx="-29.7" cy="-31.3" rx="2.7" ry="2.4"/>
+      </g>
+      <ellipse cx="-4.3" cy="55.1" rx="48.6" ry="16.2" fill="#e89a2a" opacity=".22" filter="url(#pf1blur)"/>
+      <ellipse cx="-11.9" cy="-30.2" rx="21.6" ry="9.2" fill="#fff" opacity=".55" transform="rotate(-18 -11.9 -30.2)" filter="url(#pf1soft)"/>
+    </g>
+    <ellipse rx="54.0" ry="54.0" fill="none" stroke="#e8951b" stroke-opacity=".7" stroke-width="1.4"/>
+    <g transform="translate(40.0 -13.0) scale(0.55 1.00)">
+    <ellipse rx="12.1" ry="13.1" fill="url(#pf1eye)" stroke="#e2a12a" stroke-opacity=".5" stroke-width="1"/>
+    <circle cx="2.4" cy="1.5" r="8.5" fill="url(#pf1iris)"/>
+    <circle cx="4.6" cy="-2.9" r="3.6" fill="#fff"/>
+    <circle cx="-1.0" cy="5.1" r="1.6" fill="#fff" opacity=".9"/>
+  </g>
+    <ellipse cx="19.4" cy="11.9" rx="9" ry="5" fill="#ff7e8a" opacity=".5" filter="url(#pf1soft)"/>
+    <ellipse cx="43.2" cy="7.6" rx="5" ry="3.5" fill="#ff7e8a" opacity=".45" filter="url(#pf1soft)"/>
+    <g transform="translate(17.3 -8.6) scale(1 1.00)">
+    <ellipse rx="15.5" ry="16.7" fill="url(#pf1eye)" stroke="#e2a12a" stroke-opacity=".5" stroke-width="1"/>
+    <circle cx="3.1" cy="1.9" r="10.8" fill="url(#pf1iris)"/>
+    <circle cx="5.9" cy="-3.7" r="4.6" fill="#fff"/>
+    <circle cx="-1.2" cy="6.5" r="2.0" fill="#fff" opacity=".9"/>
+  </g>
+    <g transform="translate(51.3 10.8)">
+      <ellipse rx="4.6" ry="5.0" fill="#ff8e9b" stroke="#e5687a" stroke-width="1"/>
+      <ellipse cx=".8" rx="1.8" ry="2.2" fill="#7a2e45"/>
+    </g>
+    <g transform="translate(-1.1 16.2) rotate(0.9)">
+      <path d="M0 0 C-6 -5 -19 -3 -22 6 C-15 11 -5 8 0 0Z" fill="url(#pf1fin)" opacity=".92" stroke="#f08a3c" stroke-width="1"/>
+      <path d="M-3 1 L-16 1 M-3 2.5 L-13 6" stroke="#fff" stroke-opacity=".5" stroke-width="1.5" stroke-linecap="round"/>
+    </g>
+  </g></g>
+  <g fill="#fff" fill-opacity=".18" stroke="#fff" stroke-width="2"><circle cx="112" cy="46" r="6"/><circle cx="118" cy="30" r="3.5"/></g>
+</svg>

@@ -1,10 +1,10 @@
-/* Service worker do Gole: app offline + exibicao dos lembretes (push).
+/* Service worker do Glub: app offline + exibicao dos lembretes (push).
  *
  * Cache no mesmo esquema do gym_tracker: navegacao rede-primeiro, demais
  * arquivos cache-primeiro com revalidacao. Bumpar VERSION e como se deploya.
  */
 
-const VERSION = 'gole-v5';
+const VERSION = 'glub-v6';
 
 // Em localhost o cache atrapalha mais do que ajuda; o SW fica transparente
 // (mas continua exibindo push, pra testar notificacao no desktop).
@@ -15,8 +15,8 @@ const ASSETS = [
   './index.html',
   './manifest.webmanifest',
   './css/styles.css',
-  './fonts/manrope-variable.woff2',
-  './fonts/barlow-condensed-700.woff2',
+  './fonts/figtree-variable.woff2',
+  './fonts/bagel-fat-one.woff2',
   './js/app.js',
   './js/ui.js',
   './js/db.js',
@@ -24,6 +24,7 @@ const ASSETS = [
   './js/intake.js',
   './js/reminder.js',
   './js/hydration.js',
+  './js/puffer.js',
   './js/views/today.js',
   './js/views/settings.js',
   './js/views/goal-calc.js',

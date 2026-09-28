@@ -6,7 +6,7 @@
 // push NAO funcionam aqui (http://) — sao testados na URL do GitHub Pages.
 
 const PHONE = `<!doctype html><meta charset="utf-8">
-<title>Gole — moldura</title>
+<title>Glub — moldura</title>
 <style>
   html,body{margin:0;height:100%;background:#0b0f14;display:grid;place-items:center}
   iframe{width:390px;height:844px;border:0;border-radius:24px;

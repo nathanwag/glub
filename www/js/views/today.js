@@ -4,6 +4,7 @@ import * as db from '../db.js';
 import * as push from '../push.js';
 import { addDays, daySummary } from '../intake.js';
 import { SNOOZE_MIN, nextReminder } from '../reminder.js';
+import * as puffer from '../puffer.js';
 import {
   html, raw, setTop, toast, buzz, refresh, fmtMl, isIOS, isStandalone,
   openSheet, closeSheet, node, intakeList, APP_NAME,
@@ -78,6 +79,12 @@ function reminderNotice(intakes) {
     </section>`;
 }
 
+function leftLine(leftMl, glassMl) {
+  if (leftMl <= 0) return 'Baiacu cheio: meta de hoje batida';
+  const cups = Math.ceil(leftMl / glassMl);
+  return `Faltam ${fmtMl(leftMl)} · ${cups} ${cups === 1 ? 'copo' : 'copos'} pro baiacu encher`;
+}
+
 function reminderLine(settings, summary, subscribed) {
   if (isIOS() && !isStandalone()) {
     return html`<a class="status" href="#/ajustes">Para receber lembretes, adicione o ${APP_NAME} à Tela de Início.</a>`;
@@ -109,15 +116,13 @@ export async function render(view) {
   view.innerHTML = html`
     ${raw(reminderNotice(intakes))}
     <section class="hero">
+      <div class="fish" data-fish role="progressbar" aria-valuemin="0" aria-valuemax="100"
+           aria-valuenow="${Math.round(summary.progress * 100)}" aria-label="Meta de hoje"></div>
       <div class="hero__num">
         <span class="data hero__total">${new Intl.NumberFormat('pt-BR').format(summary.totalMl)}</span>
         <span class="hero__goal">/ ${fmtMl(settings.goalMl)}</span>
       </div>
-      <div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-           aria-valuenow="${Math.round(summary.progress * 100)}">
-        <div class="meter__fill" style="width: ${summary.progress * 100}%"></div>
-      </div>
-      <p class="hero__left">${summary.leftMl > 0 ? `Faltam ${fmtMl(summary.leftMl)}` : 'Meta de hoje batida'}</p>
+      <p class="hero__left">${leftLine(summary.leftMl, settings.glassMl)}</p>
     </section>
 
     <button class="btn btn--primary btn--lg btn--block" type="button" data-drink="${settings.glassMl}">
@@ -131,6 +136,8 @@ export async function render(view) {
     ${raw(intakeList(intakes, 'Nenhum copo ainda hoje.'))}
     <a class="btn btn--ghost btn--block" href="#/dia?d=${addDays(db.dayOf(), -1)}">Esqueceu um copo? Ver ontem</a>
   `;
+
+  puffer.mount(view.querySelector('[data-fish]'), summary.progress);
 
   view.onclick = (e) => {
     const drinkBtn = e.target.closest('[data-drink]');

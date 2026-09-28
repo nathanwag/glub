@@ -1,32 +1,37 @@
 /* ==========================================================================
-   Gole - folha de estilo unica, mobile-first. Mesma estrutura de tokens do
-   gym_tracker (Anilha), com o vermelho da anilha trocado por azul-agua.
-   Sem dependencias externas: fontes locais, nada remoto.
+   Glub - folha de estilo unica, mobile-first. Identidade do baiacu: agua
+   clara (ou fundo do mar no escuro), amarelo do peixe nos botoes principais,
+   borda e sombra dura de adesivo. Sem dependencias externas: fontes locais.
    ========================================================================== */
 
 :root {
-  --bg: #eef3f7;
+  --bg: #e9f7fc;
   --surface: #ffffff;
-  --surface-2: #e2e9ef;
-  --border: #d1dbe4;
-  --text: #10161c;
-  --muted: #5a6672;
-  --accent: #1668b8;
-  --accent-soft: #deebf8;
+  --surface-2: #d8eff8;
+  --border: #c9e4f0;
+  --text: #17324d;
+  --muted: #587186;
+  --accent: #1778bd;
+  --accent-soft: #d3ecf9;
   --on-accent: #ffffff;
+  --yellow: #ffc53d;
+  --on-yellow: #17324d;
+  --edge: #17324d;
+  --title: #17324d;
   --danger: #b3231b;
   --success: #2c7a48;
+  --fish-shadow: rgba(14, 70, 110, .16);
 
-  --fs-xs: .68rem;
-  --fs-sm: .85rem;
-  --fs-hero: 4.75rem;
-  --display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --fs-xs: .72rem;
+  --fs-sm: .875rem;
+  --fs-hero: 3.5rem;
+  --display: 'Bagel Fat One', 'Figtree', sans-serif;
 
-  --radius: 14px;
-  --radius-sm: 10px;
+  --radius: 18px;
+  --radius-sm: 14px;
   --tap: 44px;
   --pad: 16px;
-  --shadow: 0 1px 2px rgba(16, 24, 32, .06), 0 6px 20px rgba(16, 24, 32, .06);
+  --shadow: 0 1px 2px rgba(14, 50, 80, .05), 0 6px 20px rgba(14, 50, 80, .06);
 
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -37,34 +42,38 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0a0e12;
-    --surface: #131a21;
-    --surface-2: #1b242d;
-    --border: #26313c;
-    --text: #eef2f5;
-    --muted: #85919c;
-    --accent: #4aa3ff;
-    --accent-soft: #0f2236;
+    --bg: #0a2236;
+    --surface: #12304b;
+    --surface-2: #173a59;
+    --border: #1f4668;
+    --text: #eaf6ff;
+    --muted: #8fb0c8;
+    --accent: #5cc4ff;
+    --accent-soft: #123a5a;
     --on-accent: #06121f;
+    --edge: #031220;
+    --title: #ffc53d;
     --danger: #ff6b6b;
     --success: #46a05c;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 6px 20px rgba(0, 0, 0, .38);
+    --fish-shadow: rgba(0, 0, 0, .32);
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 6px 20px rgba(0, 0, 0, .3);
   }
 }
 
+/* Bagel Fat One so tem peso 400: sem isto o navegador engorda de mentira. */
 @font-face {
-  font-family: 'Barlow Condensed';
-  font-weight: 700;
+  font-family: 'Bagel Fat One';
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
-  src: url('../fonts/barlow-condensed-700.woff2') format('woff2');
+  src: url('../fonts/bagel-fat-one.woff2') format('woff2');
 }
 @font-face {
-  font-family: 'Manrope';
-  font-weight: 200 800;
+  font-family: 'Figtree';
+  font-weight: 300 900;
   font-style: normal;
   font-display: swap;
-  src: url('../fonts/manrope-variable.woff2') format('woff2-variations'), url('../fonts/manrope-variable.woff2') format('woff2');
+  src: url('../fonts/figtree-variable.woff2') format('woff2-variations'), url('../fonts/figtree-variable.woff2') format('woff2');
 }
 
 * { box-sizing: border-box; }
@@ -77,8 +86,9 @@ html, body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Figtree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 16px;
+  font-synthesis: none;
   line-height: 1.45;
   -webkit-text-size-adjust: 100%;
   overscroll-behavior-y: none;
@@ -87,17 +97,16 @@ body {
   min-height: 100dvh;
   -webkit-tap-highlight-color: transparent;
 }
-h1, h2 { margin: 0; font-weight: 650; line-height: 1.25; }
+h1, h2 { margin: 0; font-weight: 700; line-height: 1.25; }
 p { margin: 0; }
 a { color: var(--accent); }
 svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 
 .data {
   font-family: var(--display);
-  font-weight: 700;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -.01em;
-  line-height: .95;
+  line-height: 1;
 }
 .muted { color: var(--muted); }
 .row { display: flex; align-items: center; gap: 10px; }
@@ -126,10 +135,9 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   min-width: 0;
   padding-left: 8px;
   font-family: var(--display);
-  font-size: 1.375rem;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--title);
 }
 .topbar__actions { display: flex; }
 
@@ -161,9 +169,8 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 
 .section-title {
   margin: 26px 0 10px;
-  font-family: var(--display);
-  font-size: .875rem;
-  font-weight: 700;
+  font-size: .75rem;
+  font-weight: 800;
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--muted);
@@ -173,7 +180,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 
 .card {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
@@ -189,33 +196,44 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   gap: 8px;
   min-height: var(--tap);
   padding: 0 16px;
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface);
   color: var(--text);
-  font-family: var(--display);
-  font-size: 1.0625rem;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 800;
   text-decoration: none;
   cursor: pointer;
   user-select: none;
 }
-.btn:active { transform: translateY(1px); }
+.btn:active { transform: translateY(2px); }
 .btn[disabled] { opacity: .45; pointer-events: none; }
-.btn--primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn--primary {
+  background: var(--yellow);
+  border: 2.5px solid var(--edge);
+  color: var(--on-yellow);
+  box-shadow: 0 3px 0 var(--edge);
+}
+.btn--primary:active { box-shadow: 0 1px 0 var(--edge); }
 .btn--ghost { background: transparent; border-color: transparent; color: var(--accent); }
 .btn--block { display: flex; width: 100%; }
-.btn--lg { min-height: 64px; font-size: 1.6rem; text-transform: none; letter-spacing: .04em; }
+.btn--lg { min-height: 60px; font-size: 1.3rem; }
 
 /* ---------- Hoje ---------- */
 
-.hero { padding: 12px 0 8px; }
+.hero { display: flex; flex-direction: column; align-items: center; padding: 0 0 8px; text-align: center; }
 .hero__num { display: flex; align-items: baseline; gap: 8px; }
 .hero__total { font-size: var(--fs-hero); }
-.hero__goal { font-family: var(--display); font-size: 1.4rem; font-weight: 700; color: var(--muted); }
-.hero__left { margin-top: 8px; color: var(--muted); font-size: var(--fs-sm); }
+.hero__goal { font-size: 1.15rem; font-weight: 700; color: var(--muted); }
+.hero__left { margin-top: 6px; color: var(--muted); font-size: var(--fs-sm); font-weight: 600; }
+
+/* O baiacu (puffer.js). Bolhas em currentColor. */
+.fish { width: min(100%, 300px); aspect-ratio: 200 / 184; color: var(--accent); }
+/* Desfaz o estilo global de icone (svg { stroke: currentColor ... }), que
+   contornaria cada parte do peixe. */
+.fish svg { display: block; width: 100%; height: 100%; fill: #000; stroke: none; stroke-width: 1; stroke-linecap: butt; stroke-linejoin: miter; }
+.fish--sm { width: min(70%, 200px); }
 
 .meter {
   margin-top: 14px;
@@ -255,7 +273,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   border-bottom: 1px solid var(--border);
 }
 .list__row:last-child { border-bottom: 0; }
-.list__time { font-size: 1.3rem; color: var(--muted); }
+.list__time { font-family: inherit; font-weight: 700; font-size: 1.05rem; color: var(--muted); }
 .empty { font-size: var(--fs-sm); }
 
 .amounts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -317,8 +335,7 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
   overflow: visible;
   white-space: nowrap;
   text-align: center;
-  font-family: var(--display);
-  font-size: .85rem;
+  font-size: .8rem;
   font-weight: 700;
   color: var(--muted);
 }
@@ -333,7 +350,7 @@ li + li > .list__row--link { border-top: 1px solid var(--border); }
 .meter--sm .meter__fill { display: block; }
 
 .daynav { display: flex; align-items: center; justify-content: space-between; }
-.daynav__label { font-family: var(--display); font-size: 1.15rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.daynav__label { font-size: 1rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 
 /* ---------- Ajustes ---------- */
 
@@ -353,7 +370,7 @@ li + li > .list__row--link { border-top: 1px solid var(--border); }
   width: 100%;
   min-height: var(--tap);
   padding: 0 12px;
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--bg);
   color: var(--text);
@@ -381,9 +398,9 @@ li + li > .list__row--link { border-top: 1px solid var(--border); }
   border-radius: 8px;
   background: transparent;
   color: var(--muted);
-  font-family: var(--display);
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-family: inherit;
+  font-size: .95rem;
+  font-weight: 800;
   cursor: pointer;
 }
 .seg__opt[aria-checked="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
@@ -393,13 +410,13 @@ li + li > .list__row--link { border-top: 1px solid var(--border); }
   flex: 1;
   aspect-ratio: 1;
   max-width: var(--tap);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: 50%;
   background: transparent;
   color: var(--muted);
-  font-family: var(--display);
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 800;
   cursor: pointer;
 }
 .day[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }

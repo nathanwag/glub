@@ -1,7 +1,7 @@
 /* Helpers de interface compartilhados pelas telas — versao enxuta do ui.js
  * do gym_tracker: HTML seguro, topbar, toast, bottom sheet. */
 
-export const APP_NAME = 'Gole';
+export const APP_NAME = 'Glub';
 
 export const $ = (sel, root = document) => root.querySelector(sel);
 export const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));

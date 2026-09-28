@@ -4,6 +4,7 @@
 import * as db from '../db.js';
 import { addDays, atLocal, daySummary } from '../intake.js';
 import { OTHER_AMOUNTS } from './today.js';
+import * as puffer from '../puffer.js';
 import {
   html, raw, setTop, toast, buzz, refresh, fmtMl, fmtDay, openSheet, closeSheet, node, intakeList,
 } from '../ui.js';
@@ -43,13 +44,11 @@ export async function render(view, params) {
     </nav>
 
     <section class="hero">
+      <div class="fish fish--sm" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+           aria-valuenow="${Math.round(summary.progress * 100)}" aria-label="Meta do dia">${raw(puffer.still(summary.progress))}</div>
       <div class="hero__num">
         <span class="data hero__total">${new Intl.NumberFormat('pt-BR').format(summary.totalMl)}</span>
         <span class="hero__goal">/ ${fmtMl(settings.goalMl)}</span>
-      </div>
-      <div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-           aria-valuenow="${Math.round(summary.progress * 100)}">
-        <div class="meter__fill" style="width: ${summary.progress * 100}%"></div>
       </div>
       <p class="hero__left">${summary.leftMl > 0 ? `Ficaram faltando ${fmtMl(summary.leftMl)}` : 'Meta batida'}</p>
     </section>
