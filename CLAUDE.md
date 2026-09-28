@@ -73,7 +73,8 @@ Só os módulos puros e o Worker são testados. Os seams são:
 - `intake.js`: `daySummary`, `history` (totais por dia, média só dos dias
   com registro, dias na meta e sequência, onde hoje incompleto não quebra a
   sequência) e `atLocal(day, 'HH:MM', tz, dayStart)`, que dá o instante de
-  um copo lançado num dia passado (antes da virada, é a madrugada seguinte)
+  um copo lançado num dia passado (antes da virada, é a madrugada seguinte).
+  `parseMl(texto)` lê a quantidade digitada (copo nos Ajustes, "Outro valor")
 - `schedule.js`: textos e linha do dia dos Ajustes. `daysLabel`,
   `intervalLabel`, `remindersSummary` e `dayTimeline(config)` (janela e cada
   lembrete possível, de 0 a 1, numa barra de 24 h que começa em `dayStart`)

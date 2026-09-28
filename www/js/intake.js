@@ -62,3 +62,10 @@ export function atLocal(day, hhmm, tz, dayStart = '00:00') {
   }
   return new Date(guess * 60000).toISOString();
 }
+
+/** Quantidade digitada ("510", "510 ml", "1.000") em ml, ou null se nao ha
+ *  quantidade. So digitos contam: o teclado numerico do iPhone nao tem virgula. */
+export function parseMl(text) {
+  const ml = Number(String(text).replace(/\D/g, ''));
+  return ml > 0 ? ml : null;
+}

@@ -1,6 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { atLocal, daySummary, history } from './intake.js';
+import {
+  atLocal, daySummary, history, parseMl,
+} from './intake.js';
 
 test('o resumo do dia soma os copos e aponta o ultimo, fora de ordem ou nao', () => {
   const intakes = [
@@ -73,4 +75,19 @@ test('o horario local respeita o horario de verao do dia escolhido', () => {
 test('com a virada as 05:00, um horario de madrugada cai na noite seguinte do mesmo dia', () => {
   assert.equal(atLocal('2026-09-26', '01:30', 'America/Sao_Paulo', '05:00'), '2026-09-27T04:30:00.000Z');
   assert.equal(atLocal('2026-09-26', '05:00', 'America/Sao_Paulo', '05:00'), '2026-09-26T08:00:00.000Z');
+});
+
+test('quantidade digitada vira ml inteiro', () => {
+  assert.equal(parseMl('510'), 510);
+});
+
+test('a unidade e o ponto de milhar sao ignorados', () => {
+  assert.equal(parseMl('510 ml'), 510);
+  assert.equal(parseMl('1.000'), 1000);
+});
+
+test('vazio, zero ou sem numero nao e quantidade', () => {
+  assert.equal(parseMl(''), null);
+  assert.equal(parseMl('0'), null);
+  assert.equal(parseMl('ml'), null);
 });
