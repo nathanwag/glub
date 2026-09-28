@@ -1,6 +1,5 @@
 /* O baiacu: mascote e medidor da meta. Quanto mais cheio o dia, mais inflado
- * ele fica. Tudo aqui gera SVG como texto, sem tocar no DOM no topo do
- * modulo: scripts/icons.mjs importa este arquivo no node pra gerar os icones.
+ * ele fica. O icone do app e outro desenho, em scripts/icon-art.mjs.
  *
  * Cores do SVG ficam fixas (o peixe e amarelo nos dois temas). A sombra e as
  * bolhas seguem o tema: a sombra le --fish-shadow e as bolhas usam
@@ -131,26 +130,6 @@ function bubbles(list) {
 export function still(progress) {
   const id = nextId();
   return `<svg viewBox="${VIEWBOX}" aria-hidden="true"><defs>${defs(id)}</defs>${shadow(progress)}${body(id, { p: progress })}</svg>`;
-}
-
-/** Icone do app: quadrado cheio (o iOS arredonda). `maskable` encolhe o peixe
- *  pra zona segura do Android, um circulo de 80% do lado. */
-export function icon({ maskable = false } = {}) {
-  const id = nextId();
-  const dots = [[18, 30, 5], [30, 106, 3.5], [106, 22, 4], [112, 100, 5], [14, 72, 3]]
-    .map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}"/>`).join('');
-  const fish = maskable ? 'translate(62 66) scale(.56)' : 'translate(62 66) scale(.72)';
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-  <defs>${defs(id)}
-    <linearGradient id="${id}bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#57c9f6"/><stop offset="1" stop-color="#0f6db6"/></linearGradient>
-    <radialGradient id="${id}glow" cx="50%" cy="45%" r="50%"><stop offset="0" stop-color="#bff0ff" stop-opacity=".55"/><stop offset="1" stop-color="#bff0ff" stop-opacity="0"/></radialGradient>
-  </defs>
-  <rect width="128" height="128" fill="url(#${id}bg)"/>
-  <circle cx="64" cy="62" r="56" fill="url(#${id}glow)"/>
-  <g fill="#fff" fill-opacity=".25">${dots}</g>
-  <g transform="${fish}">${body(id, { p: 1 })}</g>
-  <g fill="#fff" fill-opacity=".18" stroke="#fff" stroke-width="2"><circle cx="${maskable ? 100 : 112}" cy="46" r="6"/><circle cx="${maskable ? 106 : 118}" cy="30" r="3.5"/></g>
-</svg>`;
 }
 
 // Ultimo estado mostrado, entre renderizacoes da tela: refresh() recria o

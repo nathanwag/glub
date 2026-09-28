@@ -90,8 +90,9 @@ KV e `send` são fakes, e o push service é a única fronteira mockada. `db.js`,
 
 O mascote é um baiacu, e ele é o medidor da meta: `www/js/puffer.js` desenha
 o SVG inflado conforme o progresso do dia (`mount` anima na tela Hoje e
-engole a cada copo, `still` é a versão parada). Os ícones saem do mesmo
-desenho: depois de mexer no peixe, rode `node scripts/icons.mjs`. O estilo
+engole a cada copo, `still` é a versão parada). O ícone do app é outro
+desenho, mais simples, em `scripts/icon-art.mjs`: depois de mexer nele, rode
+`node scripts/icons.mjs` pra gerar o SVG e os PNGs. O estilo
 global de `svg` (ícones de traço) não pode vazar pro peixe; `.fish svg`
 desfaz isso.
 

@@ -1,11 +1,11 @@
-// Gera os icones do app a partir do baiacu de www/js/puffer.js:
+// Gera os icones do app a partir de scripts/icon-art.mjs:
 //   node scripts/icons.mjs
 // Rode de novo sempre que o desenho mudar. O sharp vem como dependencia do
 // wrangler em worker/node_modules (npm --prefix worker install).
 
 import { writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
-import { icon } from '../www/js/puffer.js';
+import { icon } from './icon-art.mjs';
 
 const sharp = createRequire(new URL('../worker/package.json', import.meta.url))('sharp');
 const out = (name) => new URL(`../www/icons/${name}`, import.meta.url);
