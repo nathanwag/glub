@@ -2,12 +2,14 @@
 
 import * as db from '../db.js';
 import * as push from '../push.js';
-import { addDays, daySummary, parseMl } from '../intake.js';
+import {
+  addDays, byPeriod, daySummary, parseMl,
+} from '../intake.js';
 import { SNOOZE_MIN, nextReminder } from '../reminder.js';
 import * as puffer from '../puffer.js';
 import {
   html, raw, setTop, toast, buzz, refresh, fmtMl, isIOS, isStandalone,
-  openSheet, closeSheet, node, intakeList, APP_NAME,
+  openSheet, closeSheet, node, fmtTime, APP_NAME,
 } from '../ui.js';
 
 export const OTHER_AMOUNTS = [100, 150, 200, 300, 350, 400, 500, 750];
@@ -101,6 +103,52 @@ function reminderLine(settings, summary, subscribed) {
     : html`<p class="status">Sem mais lembretes hoje.</p>`;
 }
 
+// Periodos que a pessoa abriu ou fechou, em relacao ao padrao (so o atual
+// aberto). Sobrevive ao redesenho de cada copo e zera quando o dia vira.
+let toggled = { day: null, ids: new Set() };
+
+const X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const CHEVRON = '<svg class="period__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+
+function periodList(intakes) {
+  if (!intakes.length) return html`<p class="muted empty">Nenhum copo ainda hoje.</p>`;
+  const day = db.dayOf();
+  if (toggled.day !== day) toggled = { day, ids: new Set() };
+
+  return html`<div class="card periods">${raw(byPeriod(intakes, db.settings().tz, new Date()).map((p) => {
+    if (!p.intakes.length) {
+      return html`
+        <div class="period period--empty">
+          <span class="period__name">${p.label}<small>${p.range}</small></span>
+          <span>${p.when === 'past' ? 'nenhum copo' : 'ainda não'}</span>
+        </div>`;
+    }
+    const open = toggled.ids.has(p.id) !== (p.when === 'now');
+    const n = p.intakes.length;
+    return html`
+      <button class="period" type="button" data-period="${p.id}" aria-expanded="${String(open)}">
+        <span class="period__name">${p.label}<small>${n} ${n === 1 ? 'copo' : 'copos'} · ${p.range}</small></span>
+        <span class="data period__ml">${fmtMl(p.totalMl)}</span>
+        ${raw(CHEVRON)}
+      </button>
+      <ul class="period__list" ${open ? '' : 'hidden'}>${raw(p.intakes.map((i) => html`
+        <li class="list__row">
+          <span class="data list__time">${fmtTime(i.at)}</span>
+          <span class="grow">${fmtMl(i.ml)}</span>
+          <button class="icon-btn" type="button" data-undo="${i.id}" aria-label="Apagar ${fmtMl(i.ml)} das ${fmtTime(i.at)}">${raw(X)}</button>
+        </li>`).join(''))}
+      </ul>`;
+  }).join(''))}</div>`;
+}
+
+function togglePeriod(button) {
+  const { period } = button.dataset;
+  if (!toggled.ids.delete(period)) toggled.ids.add(period);
+  const open = button.getAttribute('aria-expanded') !== 'true';
+  button.setAttribute('aria-expanded', String(open));
+  button.nextElementSibling.hidden = !open;
+}
+
 export async function render(view) {
   setTop({
     title: APP_NAME,
@@ -133,13 +181,15 @@ export async function render(view) {
     ${raw(reminderLine(settings, summary, subscribed))}
 
     <h2 class="section-title">Hoje</h2>
-    ${raw(intakeList(intakes, 'Nenhum copo ainda hoje.'))}
+    ${raw(periodList(intakes))}
     <a class="btn btn--ghost btn--block" href="#/dia?d=${addDays(db.dayOf(), -1)}">Esqueceu um copo? Ver ontem</a>
   `;
 
   puffer.mount(view.querySelector('[data-fish]'), summary.progress);
 
   view.onclick = (e) => {
+    const periodBtn = e.target.closest('[data-period]');
+    if (periodBtn) { togglePeriod(periodBtn); return; }
     const drinkBtn = e.target.closest('[data-drink]');
     if (drinkBtn) { drink(Number(drinkBtn.dataset.drink)); return; }
     const undoBtn = e.target.closest('[data-undo]');

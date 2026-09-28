@@ -276,6 +276,35 @@ svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width:
 .list__time { font-family: inherit; font-weight: 700; font-size: 1.05rem; color: var(--muted); }
 .empty { font-size: var(--fs-sm); }
 
+/* Copos de hoje por periodo: so o atual abre sozinho, a lista nao cresce sem fim. */
+.period {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 58px;
+  padding: 8px 12px 8px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.period:active { background: var(--surface-2); }
+.period__name { flex: 1; min-width: 0; font-weight: 800; }
+.period__name small { display: block; font-size: .8rem; font-weight: 600; color: var(--muted); }
+.period__ml { font-size: 1.2rem; }
+.period__chev { flex: none; width: 18px; height: 18px; color: var(--muted); transition: transform .2s; }
+.period[aria-expanded="true"] .period__chev { transform: rotate(180deg); }
+.period--empty { cursor: default; color: var(--muted); font-size: var(--fs-sm); }
+.period--empty .period__name { color: var(--muted); font-size: 1rem; }
+.period--empty:active { background: transparent; }
+.period__list { margin: 0; padding: 0; list-style: none; background: var(--bg); }
+.period__list .list__row { min-height: 46px; padding-left: 28px; }
+/* Depois do .period, cujo border: 0 apagaria a divisoria. */
+.periods > * + * { border-top: 1px solid var(--border); }
+
 .amounts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 
 /* ---------- Historico ---------- */
