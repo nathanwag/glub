@@ -61,7 +61,7 @@ const toHHMM = (minutes) => `${pad(Math.floor(minutes / 60))}:${pad(minutes % 60
 // Cortes de manha, tarde e noite, os mesmos do byPeriod (intake.js). A janela
 // dos lembretes recorta esses periodos.
 const PERIODS = [['manhã', 12 * 60], ['tarde', 18 * 60], ['noite', 24 * 60]];
-const FINAL_CALL_MIN = 45;
+const FINAL_CALL_MIN = 30;
 
 /** Momentos do dia em que um aviso pode sair: o meio e a reta final de cada
  *  periodo da janela, em minutos desde a meia-noite. `needMl` e quanto ja

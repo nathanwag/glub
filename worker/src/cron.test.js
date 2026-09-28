@@ -50,7 +50,7 @@ test('assinatura expirada (410) e esquecida: as rodadas seguintes nao tentam de 
   const gone = fakeSender(410);
 
   await handleCron({ kv, send: gone.send, now: at('2026-09-22T10:00:00') });
-  await handleCron({ kv, send: gone.send, now: at('2026-09-22T11:15:00') });
+  await handleCron({ kv, send: gone.send, now: at('2026-09-22T11:30:00') });
 
   assert.equal(gone.sent.length, 1);
 });
@@ -94,7 +94,7 @@ test('no meio do periodo, a notificacao diz quanto falta ate o fim dele, em ml e
 });
 
 test('na reta final, a notificacao e a ultima chamada do periodo', async () => {
-  const { notification } = await notificationAt('2026-09-22T11:15:00', { todayMl: 300 });
+  const { notification } = await notificationAt('2026-09-22T11:30:00', { todayMl: 300 });
   assert.equal(notification.title, 'Última chamada da manhã');
   assert.equal(notification.body, 'Faltam 250 ml até as 12:00 (1 copo).');
 });
@@ -102,7 +102,7 @@ test('na reta final, a notificacao e a ultima chamada do periodo', async () => {
 test('o aviso adiado fala do periodo em que sai', async () => {
   const { notification } = await notificationAt('2026-09-22T11:55:00', {
     todayMl: 300,
-    lastSentAt: at('2026-09-22T11:15:00').toISOString(),
+    lastSentAt: at('2026-09-22T11:30:00').toISOString(),
     snoozedAt: at('2026-09-22T11:45:00').toISOString(),
   });
   assert.equal(notification.body, 'Faltam 250 ml até as 12:00 (1 copo).');
@@ -113,7 +113,7 @@ test('tocar na notificacao leva a rota que registra o copo, com um id por lembre
   const { send, sent } = fakeSender();
 
   await handleCron({ kv, send, now: at('2026-09-22T10:00:00') });
-  await handleCron({ kv, send, now: at('2026-09-22T11:15:00') });
+  await handleCron({ kv, send, now: at('2026-09-22T11:30:00') });
 
   // O id e o que impede o mesmo toque de registrar dois copos.
   const [first, second] = sent.map((s) => new URL(s.message.notification.navigate));

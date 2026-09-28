@@ -66,7 +66,7 @@ npm run dev:worker               # wrangler dev: app + API + cron (precisa de wo
 - **Os avisos saem por período, e só pra quem está atrasado.** A janela é
   cortada em manhã (até 12h), tarde (até 18h) e noite (até `end`), e a meta
   se divide pelas horas de cada um, acumulada e arredondada em 50 ml
-  (`nudgePoints`). Cada período avisa no meio e 45 min antes do fim, se o
+  (`nudgePoints`). Cada período avisa no meio e 30 min antes do fim, se o
   total do dia estiver abaixo do esperado ali. Cada momento sai uma vez só
   (`lastSentAt`), e um momento perdido é substituído pelo seguinte. Não há
   mais `intervalMin` nem `stopAtGoal`.

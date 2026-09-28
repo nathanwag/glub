@@ -35,6 +35,7 @@ test('na linha do dia, a janela e a fracao das 24 h contada a partir da virada',
 
 test('a linha do dia marca o meio e a reta final de cada periodo', () => {
   const t = dayTimeline({ ...config, dayStart: '00:00', start: '06:00', end: '21:00' });
-  // Manha 09:00 e 11:15, tarde 15:00 e 17:15, noite (18-21) 19:30 e 20:15.
-  assert.deepEqual(t.reminders, [0.375, 0.46875, 0.625, 0.71875, 0.8125, 0.84375]);
+  // Manha 09:00 e 11:30, tarde 15:00 e 17:30, noite (18-21) 19:30 e 20:30.
+  const minutes = [540, 690, 900, 1050, 1170, 1230];
+  assert.deepEqual(t.reminders, minutes.map((m) => m / 1440));
 });

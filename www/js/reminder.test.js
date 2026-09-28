@@ -18,7 +18,7 @@ const config = {
 };
 
 // Com a janela 08-22 e 2000 ml: manha 08-12 (550 ml), tarde 12-18 (1450
-// acumulado) e noite 18-22 (2000). Cada periodo avisa no meio e 45 min antes
+// acumulado) e noite 18-22 (2000). Cada periodo avisa no meio e 30 min antes
 // do fim, e so se estiver atrasado.
 test('sem beber nada, o primeiro aviso sai no meio da manha, nao no inicio da janela', () => {
   assert.equal(isDue(config, {}, at('2026-09-22T08:00:00')), false);
@@ -34,7 +34,7 @@ test('no meio do periodo, so avisa quem esta abaixo do ritmo da meta do periodo'
 });
 
 test('na reta final, so avisa quem ainda nao fechou o periodo', () => {
-  const now = at('2026-09-22T11:15:00');
+  const now = at('2026-09-22T11:30:00');
   assert.equal(isDue(config, { day: '2026-09-22', todayMl: 500 }, now), true);
   assert.equal(isDue(config, { day: '2026-09-22', todayMl: 550 }, now), false);
 });
@@ -49,8 +49,8 @@ test('o atraso da manha passa pra tarde: a meta e acumulada', () => {
 test('cada momento avisa uma vez so: enviado o do meio, o proximo e a reta final', () => {
   const state = { lastSentAt: at('2026-09-22T10:00:00').toISOString() };
   assert.equal(isDue(config, state, at('2026-09-22T10:05:00')), false);
-  assert.equal(isDue(config, state, at('2026-09-22T11:10:00')), false);
-  assert.equal(isDue(config, state, at('2026-09-22T11:15:00')), true);
+  assert.equal(isDue(config, state, at('2026-09-22T11:25:00')), false);
+  assert.equal(isDue(config, state, at('2026-09-22T11:30:00')), true);
 });
 
 test('o ultimo aviso de ontem nao segura o primeiro de hoje', () => {
@@ -112,7 +112,7 @@ test('o proximo lembrete e o proximo momento em que, sem beber mais, voce estari
   const day = '2026-09-22';
   assert.equal(nextReminder(config, {}, at('2026-09-22T09:00:00')), '10:00');
   // No ritmo da manha (275), mas sem fechar os 550.
-  assert.equal(nextReminder(config, { day, todayMl: 300 }, at('2026-09-22T09:00:00')), '11:15');
+  assert.equal(nextReminder(config, { day, todayMl: 300 }, at('2026-09-22T09:00:00')), '11:30');
   // Manha fechada: o proximo e o meio da tarde (1000).
   assert.equal(nextReminder(config, { day, todayMl: 550 }, at('2026-09-22T10:30:00')), '15:00');
 });
