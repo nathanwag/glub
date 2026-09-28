@@ -11,9 +11,7 @@ const config = {
   glassMl: 250,
   start: '08:00',
   end: '22:00',
-  intervalMin: 60,
   days: [0, 1, 2, 3, 4, 5, 6],
-  stopAtGoal: true,
   tz: 'America/Sao_Paulo',
 };
 const subscription = { endpoint: 'https://web.push.apple.com/abc', keys: { p256dh: 'p', auth: 'a' } };
@@ -93,11 +91,11 @@ const at = (local) => new Date(`${local}-03:00`);
 test('sincronizar de novo nao apaga o registro do ultimo lembrete enviado', async () => {
   const { call, sent, deps } = setup();
   await call('PUT', '/api/sync', { body: { subscription, config } });
-  await handleCron({ ...deps, now: at('2026-09-22T08:00:00') });
+  await handleCron({ ...deps, now: at('2026-09-22T10:00:00') });
 
   // Mudou so a meta, sem mandar a assinatura de novo.
   await call('PUT', '/api/sync', { body: { config: { ...config, goalMl: 2500 } } });
-  await handleCron({ ...deps, now: at('2026-09-22T08:05:00') });
+  await handleCron({ ...deps, now: at('2026-09-22T10:05:00') });
 
   assert.equal((await (await call('GET', '/api/sync')).json()).subscribed, true);
   assert.equal(sent.length, 1);
@@ -106,19 +104,19 @@ test('sincronizar de novo nao apaga o registro do ultimo lembrete enviado', asyn
 test('adiar pelo app faz o cron lembrar de novo em 10 min', async () => {
   const { call, sent, deps } = setup();
   await call('PUT', '/api/sync', { body: { subscription, config } });
-  await handleCron({ ...deps, now: at('2026-09-22T08:00:00') });
+  await handleCron({ ...deps, now: at('2026-09-22T10:00:00') });
 
-  await call('PUT', '/api/sync', { body: { config, snoozedAt: at('2026-09-22T08:01:00').toISOString() } });
-  await handleCron({ ...deps, now: at('2026-09-22T08:10:00') });
+  await call('PUT', '/api/sync', { body: { config, snoozedAt: at('2026-09-22T10:01:00').toISOString() } });
+  await handleCron({ ...deps, now: at('2026-09-22T10:10:00') });
   assert.equal(sent.length, 1);
-  await handleCron({ ...deps, now: at('2026-09-22T08:15:00') });
+  await handleCron({ ...deps, now: at('2026-09-22T10:15:00') });
   assert.equal(sent.length, 2);
 });
 
 test('a notificacao abre o app na mesma origem da API', async () => {
   const { call, sent, deps } = setup();
   await call('PUT', '/api/sync', { body: { subscription, config } });
-  await handleCron({ ...deps, now: at('2026-09-22T08:00:00') });
+  await handleCron({ ...deps, now: at('2026-09-22T10:00:00') });
 
   assert.ok(sent[0].message.notification.navigate.startsWith(`${ORIGIN}/#`));
 });
