@@ -2,7 +2,7 @@
 
 import * as db from '../db.js';
 import * as push from '../push.js';
-import { daySummary } from '../intake.js';
+import { daySummary, parseMl } from '../intake.js';
 import { configError, nextReminder } from '../reminder.js';
 import {
   dayTimeline, intervalLabel, remindersSummary,
@@ -11,7 +11,6 @@ import {
   html, raw, setTop, toast, isIOS, isStandalone, fmtMl, refresh, APP_NAME,
 } from '../ui.js';
 
-const GLASSES = [150, 200, 250, 300, 350, 500];
 const INTERVALS = [30, 45, 60, 90, 120];
 // Semana comecando na segunda; o valor e o de Date#getDay.
 const DAYS = [[1, 'S'], [2, 'T'], [3, 'Q'], [4, 'Q'], [5, 'S'], [6, 'S'], [0, 'D']];
@@ -104,7 +103,7 @@ export async function render(view) {
     <section class="sec">
       <h2 class="section-title">Seu dia</h2>
       <nav class="card">
-        ${raw(item({ href: '#/ajustes/meta', ico: 'drop', title: 'Meta', sub: `${fmtMl(s.goalMl)} por dia · copo de ${fmtMl(s.glassMl)}` }))}
+        ${raw(item({ href: '#/ajustes/meta', ico: 'drop', title: 'Meta', sub: `${fmtMl(s.goalMl)} por dia · ${fmtMl(s.glassMl)} por toque` }))}
         ${raw(item({ href: '#/ajustes/lembretes', ico: 'clock', title: 'Quando lembrar', sub: remindersSummary(s) }))}
         ${raw(item({ href: '#/ajustes/virada', ico: 'moon', title: 'Virada do dia', sub: s.dayStart === '00:00' ? 'À meia-noite' : `${s.dayStart} · a madrugada conta no dia anterior` }))}
       </nav>
@@ -205,14 +204,25 @@ export async function renderGoal(view) {
           <span>Calcular minha meta</span>
           <span class="muted">peso, idade… ›</span>
         </a>
-        <div>
-          <p class="field__k">Tamanho do copo</p>
-          ${raw(segmented('glassMl', GLASSES, s.glassMl, (ml) => ml))}
-        </div>
+        <label class="set-row">
+          <span>Copo ou garrafa</span>
+          <span class="input-unit input-unit--short">
+            <input class="input" type="text" name="glassMl" inputmode="numeric" autocomplete="off" value="${s.glassMl}">
+            <span class="input-unit__u">ml</span>
+          </span>
+        </label>
+        <p class="hint">É o que o botão amarelo da tela Hoje soma a cada toque. Bebe numa garrafa? Ponha o tamanho dela.</p>
       </div>
     </section>
   `;
   view.onclick = onSettingClick;
+  view.onchange = async (e) => {
+    if (e.target.name !== 'glassMl') return;
+    // Vazio vira null, e o configError recusa.
+    const glassMl = parseMl(e.target.value);
+    if (await save({ glassMl })) toast(`Cada toque soma ${fmtMl(glassMl)}`);
+    e.target.value = db.settings().glassMl;
+  };
 }
 
 // Rotulos de hora sobre a barra; os da virada somem quando encostam na janela.

@@ -527,6 +527,7 @@ li + li > .list__row--link { border-top: 1px solid var(--border); }
 
 .input-unit { position: relative; display: block; }
 .input-unit .input { padding-right: 52px; }
+.input-unit--short { width: 8.5em; flex: none; }
 .input-unit__u {
   position: absolute;
   right: 12px;
