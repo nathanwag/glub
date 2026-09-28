@@ -69,3 +69,8 @@ test('o horario local respeita o horario de verao do dia escolhido', () => {
   assert.equal(atLocal('2026-07-01', '09:00', 'Europe/Lisbon'), '2026-07-01T08:00:00.000Z');
   assert.equal(atLocal('2026-01-15', '09:00', 'Europe/Lisbon'), '2026-01-15T09:00:00.000Z');
 });
+
+test('com a virada as 05:00, um horario de madrugada cai na noite seguinte do mesmo dia', () => {
+  assert.equal(atLocal('2026-09-26', '01:30', 'America/Sao_Paulo', '05:00'), '2026-09-27T04:30:00.000Z');
+  assert.equal(atLocal('2026-09-26', '05:00', 'America/Sao_Paulo', '05:00'), '2026-09-26T08:00:00.000Z');
+});

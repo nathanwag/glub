@@ -361,6 +361,8 @@ li + li > .list__row--link { border-top: 1px solid var(--border); }
   font-size: 16px;
 }
 .input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+/* Horario ao lado do rotulo, numa set-row. */
+.input--time { width: 7.5em; flex: none; }
 
 .stepper { display: flex; align-items: center; gap: 4px; }
 .stepper__v { min-width: 6.5ch; text-align: center; font-size: 1.3rem; }

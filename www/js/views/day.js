@@ -89,7 +89,7 @@ function pickAmount(day, settings) {
     closeSheet();
     buzz();
     // Passado nao mexe no lembrete de hoje: nao precisa de push.sync().
-    await db.addIntake(Number(btn.dataset.ml), new Date(atLocal(day, time, settings.tz)));
+    await db.addIntake(Number(btn.dataset.ml), new Date(atLocal(day, time, settings.tz, settings.dayStart)));
     refresh();
   };
   openSheet(`Adicionar em ${title(day)}`, body);

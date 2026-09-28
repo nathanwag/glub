@@ -12,6 +12,8 @@ export const DEFAULT_CONFIG = {
   intervalMin: 60,
   days: [0, 1, 2, 3, 4, 5, 6],
   stopAtGoal: true,
+  // Hora em que o dia vira (dayOf). Config sem ela, de app antigo, vale 00:00.
+  dayStart: '00:00',
 };
 
 // "Adiar" da tela aberta pela notificacao. O cron roda de 5 em 5 min, entao o
@@ -40,6 +42,19 @@ export function localParts(date, tz) {
     weekday: WEEKDAYS.indexOf(get('weekday')),
     minutes: Number(get('hour')) * 60 + Number(get('minute')),
   };
+}
+
+/** Soma `n` dias a um dia AAAA-MM-DD. Conta de calendario em UTC, sem fuso. */
+export function addDays(day, n) {
+  const [y, m, d] = day.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
+}
+
+/** Dia (AAAA-MM-DD) a que `date` pertence no fuso `tz`, com o dia virando as
+ *  `dayStart` (HH:MM): antes disso, a madrugada ainda conta no dia anterior. */
+export function dayOf(date, tz, dayStart = '00:00') {
+  const { day, minutes } = localParts(date, tz);
+  return minutes < toMinutes(dayStart) ? addDays(day, -1) : day;
 }
 
 const pad = (n) => String(n).padStart(2, '0');
@@ -101,9 +116,14 @@ function validTimeZone(tz) {
  *  e a defesa do Worker contra o que chega pela rede, entao nao pode lancar. */
 export function configError(config) {
   if (!config || typeof config !== 'object') return 'Configuração ausente.';
-  if (!HHMM.test(config.start) || !HHMM.test(config.end)) return 'Horário inválido.';
+  const dayStart = config.dayStart ?? '00:00';
+  if (![config.start, config.end, dayStart].every((t) => HHMM.test(t))) return 'Horário inválido.';
   if (toMinutes(config.end) <= toMinutes(config.start)) {
     return 'O fim dos lembretes precisa ser depois do início.';
+  }
+  // Antes da virada, o lembrete olharia o total do dia anterior.
+  if (toMinutes(config.start) < toMinutes(dayStart)) {
+    return 'Os lembretes precisam começar depois da virada do dia.';
   }
   if (!Array.isArray(config.days) || config.days.length === 0) {
     return 'Escolha pelo menos um dia da semana.';

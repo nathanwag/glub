@@ -56,17 +56,23 @@ npm run dev:worker               # wrangler dev: app + API + cron (precisa de wo
   idade, sexo, exercício, calor e gestação, guardados em `settings`).
   `push.serverConfig()` só envia as chaves de `DEFAULT_CONFIG`. Não mande
   dado de saúde pro Worker.
+- **O dia vira em `dayStart`, não à meia-noite.** Copo antes dessa hora conta
+  no dia anterior. Todo "que dia é" passa por `dayOf(date, tz, dayStart)`
+  (`db.dayOf()` no app), nunca por `localParts(...).day`. O dia fica gravado
+  em cada copo (índice `by_day`), então mudar a virada chama
+  `db.rekeyIntakes()`. A janela dos lembretes continua no dia de calendário, e
+  `configError` exige `start >= dayStart`. Config sem `dayStart` vale `00:00`.
 - **`DB_NAME = 'gole'` não muda.** Trocar o nome abre um banco vazio.
 - **Arquivos `*.test.js` não são publicados** (`www/.assetsignore`).
 
 ## Testes
 
 Só os módulos puros e o Worker são testados. Os seams são:
-- `reminder.js`: `isDue`, `nextReminder`, `configError`
+- `reminder.js`: `isDue`, `nextReminder`, `configError`, `dayOf`
 - `intake.js`: `daySummary`, `history` (totais por dia, média só dos dias
   com registro, dias na meta e sequência, onde hoje incompleto não quebra a
-  sequência) e `atLocal(day, 'HH:MM', tz)`, que dá o instante de um copo
-  lançado num dia passado
+  sequência) e `atLocal(day, 'HH:MM', tz, dayStart)`, que dá o instante de
+  um copo lançado num dia passado (antes da virada, é a madrugada seguinte)
 - `hydration.js`: `estimateWater(profile)`. A conta principal usa ml/kg por
   faixa de idade (40, 35, 30 e 25), mais exercício (500 ml/h, o piso do ACSM),
   calor (+500) e gestação ou amamentação (+300/+700, EFSA). Também compara com

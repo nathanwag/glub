@@ -4,7 +4,7 @@
  * arquivos cache-primeiro com revalidacao. Bumpar VERSION e como se deploya.
  */
 
-const VERSION = 'gole-v4';
+const VERSION = 'gole-v5';
 
 // Em localhost o cache atrapalha mais do que ajuda; o SW fica transparente
 // (mas continua exibindo push, pra testar notificacao no desktop).

@@ -21,11 +21,12 @@ function segmented(name, options, value, label) {
       aria-checked="${opt === value}">${label(opt)}</button>`).join(''))}</div>`;
 }
 
-async function save(patch) {
+async function save(patch, afterSave) {
   const next = { ...db.settings(), ...patch };
   const error = configError(next);
   if (error) { toast(error); return false; }
   await db.saveSettings(patch);
+  await afterSave?.();
   try {
     await push.sync();
   } catch (err) {
@@ -85,6 +86,11 @@ export async function render(view) {
           <p class="field__k">Tamanho do copo</p>
           ${raw(segmented('glassMl', GLASSES, s.glassMl, (ml) => ml))}
         </div>
+        <label class="set-row">
+          <span>O dia vira às</span>
+          <input class="input input--time" type="time" name="dayStart" value="${s.dayStart}">
+        </label>
+        <p class="hint">Copos antes desse horário contam no dia anterior. Quem dorme depois da meia-noite pode pôr a virada de madrugada, tipo 05:00.</p>
       </div>
     </section>
 
@@ -152,6 +158,8 @@ export async function render(view) {
     const { name } = e.target;
     if (name === 'start' || name === 'end') {
       if (!(await save({ [name]: e.target.value }))) e.target.value = db.settings()[name];
+    } else if (name === 'dayStart') {
+      if (!(await save({ dayStart: e.target.value }, db.rekeyIntakes))) e.target.value = db.settings().dayStart;
     } else if (name === 'stopAtGoal') {
       await save({ stopAtGoal: e.target.checked });
     } else if (name === 'token') {

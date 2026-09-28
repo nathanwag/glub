@@ -5,7 +5,7 @@
  * `await` acontece do lado de fora — nunca um `await` no meio de uma.
  */
 
-import { DEFAULT_CONFIG, localParts } from './reminder.js';
+import { DEFAULT_CONFIG, dayOf as dayIn } from './reminder.js';
 
 // Nome do banco NAO muda: IndexedDB e chaveado por (origem, nome), e trocar
 // a string abriria um banco novo e vazio.
@@ -88,13 +88,27 @@ export async function saveSettings(patch) {
   });
 }
 
-/** Dia (AAAA-MM-DD) de `date` no fuso dos ajustes — o mesmo que o Worker usa. */
-export const dayOf = (date = new Date()) => localParts(date, settingsCache.tz).day;
+/** Dia (AAAA-MM-DD) de `date` no fuso e na virada do dia dos ajustes. */
+export const dayOf = (date = new Date()) => dayIn(date, settingsCache.tz, settingsCache.dayStart);
 
 export async function addIntake(ml, at = new Date()) {
   const intake = { ml, at: at.toISOString(), day: dayOf(at) };
   const id = await tx('intakes', 'readwrite', (t) => req(t.objectStore('intakes').add(intake)));
   return { ...intake, id: await id };
+}
+
+/** Refaz o dia de cada copo com os ajustes atuais, depois de mudar a virada
+ *  do dia: o dia e gravado no copo pra servir de indice. */
+export async function rekeyIntakes() {
+  await tx('intakes', 'readwrite', (t) => {
+    t.objectStore('intakes').openCursor().onsuccess = (e) => {
+      const cursor = e.target.result;
+      if (!cursor) return;
+      const day = dayOf(new Date(cursor.value.at));
+      if (day !== cursor.value.day) cursor.update({ ...cursor.value, day });
+      cursor.continue();
+    };
+  });
 }
 
 export async function deleteIntake(id) {

@@ -1,4 +1,4 @@
-import { isDue, localParts } from '../../www/js/reminder.js';
+import { dayOf, isDue } from '../../www/js/reminder.js';
 
 export const DEVICE_KEY = 'device';
 
@@ -11,7 +11,7 @@ export const DEVICE_KEY = 'device';
  *  do envio) impede que o mesmo toque registre duas vezes. */
 export function reminderMessage(device, now) {
   const { config } = device;
-  const today = localParts(now, config.tz).day;
+  const today = dayOf(now, config.tz, config.dayStart);
   const drank = device.day === today ? device.todayMl : 0;
   const left = config.goalMl - drank;
   return {

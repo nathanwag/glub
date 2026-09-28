@@ -1,6 +1,8 @@
 /* Contas do dia sobre os copos registrados. Puro, pra rodar sob node --test. */
 
-import { localParts } from './reminder.js';
+import { addDays, localParts } from './reminder.js';
+
+export { addDays };
 
 export function daySummary(intakes, goalMl) {
   const totalMl = intakes.reduce((sum, i) => sum + i.ml, 0);
@@ -12,12 +14,6 @@ export function daySummary(intakes, goalMl) {
     progress: Math.min(totalMl / goalMl, 1),
     leftMl: Math.max(goalMl - totalMl, 0),
   };
-}
-
-/** Soma `n` dias a um dia AAAA-MM-DD. Conta de calendario em UTC, sem fuso. */
-export function addDays(day, n) {
-  const [y, m, d] = day.split('-').map(Number);
-  return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
 }
 
 /** Os `n` dias terminando em `endDay`, do mais antigo ao mais novo. */
@@ -49,10 +45,14 @@ const utcMinutes = (day, minutes) => {
   return Date.UTC(y, m - 1, d) / 60000 + minutes;
 };
 
-/** Instante (ISO) do horario HH:MM no dia AAAA-MM-DD, no fuso `tz`. */
-export function atLocal(day, hhmm, tz) {
+/** Instante (ISO) do horario HH:MM no dia AAAA-MM-DD, no fuso `tz`, com o dia
+ *  virando as `dayStart`. */
+export function atLocal(day, hhmm, tz, dayStart = '00:00') {
   const [h, m] = hhmm.split(':').map(Number);
-  const wanted = utcMinutes(day, h * 60 + m);
+  // Antes da virada e a madrugada seguinte, que ainda conta em `day`.
+  // HH:MM com zero a esquerda ordena como texto.
+  const date = hhmm < dayStart ? addDays(day, 1) : day;
+  const wanted = utcMinutes(date, h * 60 + m);
   // Chuta como se fosse UTC e corrige pelo que o fuso mostra. A segunda volta
   // acerta quando o chute cai do outro lado de uma troca de horario de verao.
   let guess = wanted;

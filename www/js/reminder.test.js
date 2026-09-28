@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  DEFAULT_CONFIG, configError, isDue, nextReminder,
+  DEFAULT_CONFIG, configError, dayOf, isDue, nextReminder,
 } from './reminder.js';
 
 // Sao Paulo e UTC-3 o ano todo (sem horario de verao desde 2019).
@@ -146,4 +146,27 @@ test('config malformada vinda da rede e recusada sem lancar', () => {
     { ...config, tz: 'Marte/Olympus' },
   ];
   for (const c of broken) assert.notEqual(configError(c), null, JSON.stringify(c));
+});
+
+test('o dia vira a meia-noite por padrao', () => {
+  assert.equal(dayOf(at('2026-09-22T23:59:00'), TZ), '2026-09-22');
+  assert.equal(dayOf(at('2026-09-23T00:30:00'), TZ), '2026-09-23');
+});
+
+test('com a virada as 05:00, a madrugada ainda conta no dia anterior', () => {
+  assert.equal(dayOf(at('2026-09-23T01:30:00'), TZ, '05:00'), '2026-09-22');
+  assert.equal(dayOf(at('2026-09-23T04:59:00'), TZ, '05:00'), '2026-09-22');
+  assert.equal(dayOf(at('2026-09-23T05:00:00'), TZ, '05:00'), '2026-09-23');
+  // Virada do mes.
+  assert.equal(dayOf(at('2026-10-01T02:00:00'), TZ, '05:00'), '2026-09-30');
+});
+
+test('os lembretes nao podem comecar antes da virada do dia', () => {
+  assert.equal(configError({ ...config, dayStart: '05:00', start: '05:00' }), null);
+  assert.match(configError({ ...config, dayStart: '05:00', start: '04:30' }), /virada/i);
+});
+
+test('virada do dia invalida e recusada, e ausente (app antigo) vale como meia-noite', () => {
+  assert.notEqual(configError({ ...config, dayStart: '5h' }), null);
+  assert.equal(configError({ ...config, dayStart: undefined }), null);
 });
