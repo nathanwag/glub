@@ -50,7 +50,7 @@ export async function drinkFromReminder(view, params) {
     await saved;
     push.sync().catch(() => {});
   }
-  history.replaceState(null, '', '#/');
+  window.history.replaceState(null, '', '#/');
   await render(view);
 }
 
