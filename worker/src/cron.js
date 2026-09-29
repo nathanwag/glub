@@ -24,23 +24,21 @@ export function reminderMessage(device, now, nudge = null) {
   };
 }
 
-const TITLES = {
-  meio: (period) => `Meio da ${period}`,
-  fim: (period) => `Última chamada da ${period}`,
+const LINES = {
+  meio: (ml, until) => `Faltam ${ml} ml até as ${until}`,
+  fim: (ml, until) => `Última chamada: ${ml} ml até as ${until}`,
+  adiado: (ml, until) => `Faltam ${ml} ml até as ${until}`,
 };
 
 // Sem aviso (o teste de envio dos Ajustes), o texto fala da meta do dia.
 function nudgeText(config, drank, nudge) {
   const left = (nudge?.targetMl ?? config.goalMl) - drank;
-  if (left <= 0) return { title: 'Hora de um copo d’água', body: 'Meta batida, mas um gole a mais não faz mal.' };
-  const cups = Math.ceil(left / config.glassMl);
-  const amount = `Faltam ${left} ml`;
-  const qty = `(${cups} ${cups === 1 ? 'copo' : 'copos'})`;
-  return {
-    title: TITLES[nudge?.kind]?.(nudge.period) ?? 'Hora de um copo d’água',
-    body: nudge ? `${amount} até as ${nudge.until} ${qty}.` : `${amount} pra meta de hoje ${qty}.`,
-  };
+  if (left <= 0) return { title: 'Meta batida, mas um gole a mais não faz mal' };
+  if (!nudge) return { title: `Faltam ${left} ml pra meta de hoje` };
+  return { title: LINES[nudge.kind](left, shortTime(nudge.until)) };
 }
+
+const shortTime = (hhmm) => hhmm.replace(/:00$/, 'h').replace(':', 'h');
 
 /** Envia `message` ao aparelho. Devolve o status HTTP do push service (0 se
  *  nem chegou nele) e o motivo que ele deu na recusa. 404/410 significam que o
