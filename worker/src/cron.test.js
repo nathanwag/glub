@@ -82,21 +82,21 @@ async function notificationAt(local, device = {}) {
   return sent[0].message;
 }
 
-test('no meio do periodo, a notificacao e uma linha so com quanto falta ate o fim dele', async () => {
+test('no meio do periodo, a notificacao diz quanto falta ate o fim dele, sob o nome do app', async () => {
   // Manha 08-12 com 550 ml.
   const message = await notificationAt('2026-09-22T10:00:00', { todayMl: 0 });
 
   // Formato do Declarative Web Push (Safari 18.4+): o iOS mostra a notificacao
   // mesmo que o service worker falhe. Versoes antigas caem no sw.js.
   assert.equal(message.web_push, 8030);
-  assert.equal(message.notification.title, 'Faltam 550 ml até as 12h');
-  assert.equal(message.notification.body, undefined);
+  assert.equal(message.notification.title, 'Glub');
+  assert.equal(message.notification.body, 'Faltam 550 ml até as 12h');
 });
 
 test('na reta final, a notificacao e a ultima chamada do periodo', async () => {
   const { notification } = await notificationAt('2026-09-22T11:30:00', { todayMl: 300 });
-  assert.equal(notification.title, 'Última chamada: 250 ml até as 12h');
-  assert.equal(notification.body, undefined);
+  assert.equal(notification.title, 'Glub');
+  assert.equal(notification.body, 'Última chamada: 250 ml até as 12h');
 });
 
 test('o aviso adiado fala do periodo em que sai', async () => {
@@ -105,7 +105,7 @@ test('o aviso adiado fala do periodo em que sai', async () => {
     lastSentAt: at('2026-09-22T11:30:00').toISOString(),
     snoozedAt: at('2026-09-22T11:45:00').toISOString(),
   });
-  assert.equal(notification.title, 'Faltam 250 ml até as 12h');
+  assert.equal(notification.body, 'Faltam 250 ml até as 12h');
 });
 
 test('tocar na notificacao leva a rota que registra o copo, com um id por lembrete', async () => {

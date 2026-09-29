@@ -146,19 +146,18 @@ test('testar envia uma notificacao na hora, fora de qualquer horario', async () 
   assert.equal(res.status, 200);
   assert.equal(sent.length, 1);
   assert.equal(sent[0].message.web_push, 8030);
-  assert.equal(sent[0].message.notification.title, 'Faltam 2000 ml pra meta de hoje');
-  assert.equal(sent[0].message.notification.body, undefined);
+  assert.equal(sent[0].message.notification.title, 'Glub');
+  assert.equal(sent[0].message.notification.body, 'Faltam 2000 ml pra meta de hoje');
 });
 
-test('testar com a meta batida manda uma linha so, sem numero', async () => {
+test('testar com a meta batida nao fala em numero', async () => {
   const { call, sent } = setup();
   const day = dayOf(new Date(), config.tz, '00:00');
   await call('PUT', '/api/sync', { body: { subscription, config, day, todayMl: 2000 } });
 
   await call('POST', '/api/test');
 
-  assert.equal(sent[0].message.notification.title, 'Meta batida, mas um gole a mais não faz mal');
-  assert.equal(sent[0].message.notification.body, undefined);
+  assert.equal(sent[0].message.notification.body, 'Meta batida, mas um gole a mais não faz mal');
 });
 
 test('testar sem lembretes ativos avisa que falta ativar', async () => {

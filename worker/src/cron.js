@@ -16,7 +16,8 @@ export function reminderMessage(device, now, nudge = null) {
   return {
     web_push: 8030,
     notification: {
-      ...nudgeText(config, drank, nudge),
+      title: 'Glub',
+      body: nudgeText(config, drank, nudge),
       navigate: `${device.appUrl}#/bebi?lembrete=${encodeURIComponent(now.toISOString())}`,
       tag: 'agua',
       lang: 'pt-BR',
@@ -33,9 +34,9 @@ const LINES = {
 // Sem aviso (o teste de envio dos Ajustes), o texto fala da meta do dia.
 function nudgeText(config, drank, nudge) {
   const left = (nudge?.targetMl ?? config.goalMl) - drank;
-  if (left <= 0) return { title: 'Meta batida, mas um gole a mais não faz mal' };
-  if (!nudge) return { title: `Faltam ${left} ml pra meta de hoje` };
-  return { title: LINES[nudge.kind](left, shortTime(nudge.until)) };
+  if (left <= 0) return 'Meta batida, mas um gole a mais não faz mal';
+  if (!nudge) return `Faltam ${left} ml pra meta de hoje`;
+  return LINES[nudge.kind](left, shortTime(nudge.until));
 }
 
 const shortTime = (hhmm) => hhmm.replace(/:00$/, 'h').replace(':', 'h');
