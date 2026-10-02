@@ -1,5 +1,5 @@
 {
-  "name": "gole-worker",
+  "name": "glub-worker",
   "private": true,
   "type": "module",
   "scripts": {
