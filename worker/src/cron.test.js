@@ -73,7 +73,7 @@ test('falha passageira do push service tenta de novo na rodada seguinte', async 
   assert.equal(sent.length, 3);
 });
 
-const appUrl = 'https://water-alert.exemplo.workers.dev/';
+const appUrl = 'https://glub.exemplo.workers.dev/';
 
 async function notificationAt(local, device = {}) {
   const kv = fakeKv({ device: { subscription, config, appUrl, day: '2026-09-22', ...device } });

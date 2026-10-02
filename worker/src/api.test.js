@@ -4,7 +4,7 @@ import { handleApi } from './api.js';
 import { handleCron } from './cron.js';
 import { dayOf } from '../../www/js/reminder.js';
 
-const ORIGIN = 'https://water-alert.exemplo.workers.dev';
+const ORIGIN = 'https://glub.exemplo.workers.dev';
 const TOKEN = 'segredo-do-app';
 
 const config = {

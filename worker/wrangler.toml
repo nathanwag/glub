@@ -1,6 +1,6 @@
 # Um Worker so: serve o app (../www) e a API em /api/*, e roda o cron que
 # decide e envia os lembretes. Publicado pelo .github/workflows/deploy.yml.
-name = "water-alert"
+name = "glub"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
 

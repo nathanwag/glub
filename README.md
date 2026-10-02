@@ -133,7 +133,7 @@ O deploy usa uma conta grátis da Cloudflare.
 
 4. **Deploy.** Faça um push na `main` ou rode o workflow **Deploy** na aba
    Actions. No fim do log aparece a URL:
-   `https://water-alert.<seu-subdominio>.workers.dev`. O KV `STATE` é criado
+   `https://glub.<seu-subdominio>.workers.dev`. O KV `STATE` é criado
    automaticamente no primeiro deploy.
 5. **iPhone** (iOS 16.4 ou mais novo):
    1. Abra a URL no **Safari** e toque em **Compartilhar › Adicionar à Tela de
