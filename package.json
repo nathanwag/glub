@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Lembrete de beber água no iPhone: PWA + Web Push disparado por um Cloudflare Worker.",
-  "license": "UNLICENSED",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "scripts": {
     "dev": "browser-sync start --config bs-config.cjs",
     "dev:worker": "npm --prefix worker run dev",

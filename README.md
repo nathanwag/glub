@@ -13,6 +13,7 @@
   <img src="https://img.shields.io/badge/iOS-16.4%2B-1778bd?logo=apple&logoColor=white" alt="iOS 16.4+">
   <img src="https://img.shields.io/badge/Cloudflare-Workers-f38020?logo=cloudflare&logoColor=white" alt="Cloudflare Workers">
   <img src="https://img.shields.io/badge/JS_puro-sem_build-ffc53d" alt="JavaScript puro, sem build">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/licen%C3%A7a-PolyForm_Noncommercial-blue" alt="Licença PolyForm Noncommercial"></a>
 </p>
 
 <table align="center">
@@ -112,7 +113,7 @@ publica a interface (`www/`) como static assets do Worker (`worker/`).
 
 ## Instalação
 
-O deploy usa uma conta grátis da Cloudflare.
+Você precisa de uma conta grátis da Cloudflare e de um fork deste repositório.
 
 1. **Cloudflare.** Crie uma conta em [dash.cloudflare.com](https://dash.cloudflare.com).
    - Em *My Profile › API Tokens*, crie um token com o template
@@ -120,7 +121,7 @@ O deploy usa uma conta grátis da Cloudflare.
    - Anote também o **Account ID**, que aparece na barra lateral de
      *Workers & Pages*.
 2. **Chaves de push (VAPID).** Rode `npx web-push generate-vapid-keys`.
-3. **Secrets do GitHub.** No repositório, em *Settings › Secrets and variables ›
+3. **Secrets do GitHub.** No seu fork, em *Settings › Secrets and variables ›
    Actions*, cadastre:
 
    | Secret | Valor |
@@ -166,4 +167,9 @@ fluxo inteiro sem o iPhone. Os logs de produção aparecem em
 
 ## Licença
 
-© 2026 Nathan Wagner. Todos os direitos reservados. O código está aberto pra leitura, mas não pode ser copiado, modificado nem usado sem autorização. Veja [LICENSE](LICENSE).
+[PolyForm Noncommercial 1.0.0](LICENSE). Pode usar, estudar, modificar, fazer
+fork e compartilhar à vontade, desde que sem fins comerciais e mantendo o
+aviso de copyright. Pra uso comercial, fale comigo.
+
+As fontes em `www/fonts/` (Figtree e Bagel Fat One) seguem a
+[SIL Open Font License 1.1](www/fonts/OFL-figtree.txt).
